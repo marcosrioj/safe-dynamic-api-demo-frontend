@@ -1,6 +1,5 @@
 import Mock from "../mock";
 import shortId from "shortid";
-import * as _ from "lodash";
 
 const ChatDB = {
   user: [
@@ -220,16 +219,16 @@ Mock.onGet("/api/chat/chat-room").reply(config => {
     return [200, response];
   } else {
     let chatId = shortId.generate();
-    ChatDB.user.map(user => {
-      if (currentUser === user.id) {
-        user.chatInfo.push({
-          chatId,
-          contactId,
-          lastChatTime: Date.now(),
-          unread: 0
-        });
-      }
-    });
+    ChatDB.user.forEach((user) => {
+        if (currentUser === user.id) {
+          user.chatInfo.push({
+            chatId,
+            contactId,
+            lastChatTime: Date.now(),
+            unread: 0
+          });
+        }
+      });
     ChatDB.chatCollection.push({
       id: chatId,
       chats: []
@@ -271,7 +270,7 @@ Mock.onGet("/api/chat/contacts").reply(config => {
 Mock.onPost("/api/chat/add").reply(config => {
   let chatDetails = JSON.parse(config.data);
   let { chatId } = chatDetails;
-  ChatDB.chatCollection.map(chatRoom => {
+  ChatDB.chatCollection.forEach(chatRoom => {
     if (chatId === chatRoom.id) {
       delete chatDetails.chatId;
       chatRoom.chats.push({ ...chatDetails });

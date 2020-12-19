@@ -6,8 +6,7 @@ import {
   Card,
   Button,
   IconButton,
-  Drawer,
-  Fab
+  Drawer
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";

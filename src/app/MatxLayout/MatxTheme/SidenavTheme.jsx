@@ -12,16 +12,6 @@ const SidenavTheme = ({ theme, settings }) => {
       : "";
   }
 
-  function lightHoverStyle() {
-    return theme.palette.type === "light"
-      ? `.navigation .nav-item:hover,
-        .navigation .nav-item.active,
-        .navigation .submenu {
-          background: rgba(0, 0, 0, .08);
-        }`
-      : "";
-  }
-
   return (
     <Helmet>
       <style>

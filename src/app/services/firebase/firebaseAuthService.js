@@ -13,6 +13,7 @@ class FirebaseAuthService {
   facebookProvider;
   twitterProvider;
 
+  // eslint-disable-next-line no-useless-constructor
   constructor() {
     // UNCOMMENT IF YOU WANT TO USE FIREBASE
 

@@ -337,21 +337,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-// Moves an item from one list to another list.
-const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-  destClone.splice(droppableDestination.index, 0, removed);
-
-  const result = {};
-  result[droppableSource.droppableId] = sourceClone;
-  result[droppableDestination.droppableId] = destClone;
-
-  return result;
-};
-
 const getBoardWithMemberDetails = board => {
   const members = board.members.map(id => {
     return ScrumBoardDB.members.find(member => member.id === id);
@@ -469,7 +454,7 @@ Mock.onPost("/api/scrum-board/delete-column").reply(config => {
   const board = ScrumBoardDB.boardList.find(board => board.id === boardId);
   let deleteIndex = null;
 
-  board.list.map((column, index) => {
+  board.list.forEach((column, index) => {
     if (column.id === listId) deleteIndex = index;
   });
 
