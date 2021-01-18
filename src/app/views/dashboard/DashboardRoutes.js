@@ -9,7 +9,7 @@ const dashboardRoutes = [
   {
     path: "/dashboard/analytics",
     component: Analytics,
-    auth: authRoles.admin
+    auth: authRoles.user
   }
 ];
 

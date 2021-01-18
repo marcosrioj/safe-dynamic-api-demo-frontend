@@ -1,0 +1,1 @@
+export const BACKEND_URL = 'http://safe-dynamic-api-local.com:8080';

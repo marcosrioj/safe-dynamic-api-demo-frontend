@@ -1,9 +1,10 @@
 import axios from "axios";
+
+import { BACKEND_URL } from "appSettings";
 import localStorageService from "./localStorageService";
 
 class JwtAuthService {
 
-  // Dummy user object just for the demo
   user = {
     userId: "1",
     role: 'ADMIN',
@@ -12,7 +13,7 @@ class JwtAuthService {
     photoURL: "/assets/images/face-6.jpg",
     age: 25,
     token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh"
-  }
+  };
 
   // You need to send http request with email and passsword to your server in this method
   // Your server will return user object & a Token
@@ -20,13 +21,32 @@ class JwtAuthService {
   // You can define roles in app/auth/authRoles.js
   loginWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.user);
-      }, 1000);
-    }).then(data => {
+      axios
+        .post(`${BACKEND_URL}/auth/login`, { email, password })
+        .then((res) => {
+          if (res.data.access_token) {
+            this.setSession(res.data.access_token);
+
+            axios.post(`${BACKEND_URL}/auth/me`).then((res2) => {
+              if (res2.data.id) {
+                resolve({
+                  userId: res2.data.id,
+                  role: res2.data.type,
+                  displayName: res2.data.name,
+                  email: res2.data.email,
+                  photoURL: res2.data.avatar,
+                  token: res.data.access_token,
+                });
+              } else {
+                reject(res2);
+              }
+            });
+          } else {
+            reject(res);
+          }
+        });
+    }).then((data) => {
       // Login successful
-      // Save token
-      this.setSession(data.token);
       // Set user
       this.setUser(data);
       return data;
@@ -38,9 +58,10 @@ class JwtAuthService {
   loginWithToken = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(this.user);
+        const user = localStorageService.getItem("auth_user");
+        resolve(user);
       }, 100);
-    }).then(data => {
+    }).then((data) => {
       // Token is valid
       this.setSession(data.token);
       this.setUser(data);
@@ -51,10 +72,10 @@ class JwtAuthService {
   logout = () => {
     this.setSession(null);
     this.removeUser();
-  }
+  };
 
   // Set token to all http request header, so you don't need to attach everytime
-  setSession = token => {
+  setSession = (token) => {
     if (token) {
       localStorage.setItem("jwt_token", token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
@@ -65,13 +86,14 @@ class JwtAuthService {
   };
 
   // Save user to localstorage
-  setUser = (user) => {    
+  setUser = (user) => {
     localStorageService.setItem("auth_user", user);
-  }
+  };
+
   // Remove user from localstorage
   removeUser = () => {
     localStorage.removeItem("auth_user");
-  }
+  };
 }
 
 export default new JwtAuthService();

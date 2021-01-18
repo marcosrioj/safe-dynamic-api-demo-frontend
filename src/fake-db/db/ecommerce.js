@@ -277,7 +277,7 @@ Mock.onGet("/api/ecommerce/get-cart-list").reply(config => {
   let response = [];
 
   if (uid) {
-    response = getDetailedCartList(uid);
+    //response = getDetailedCartList(uid);
   }
 
   return [200, response];
