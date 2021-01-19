@@ -5,7 +5,7 @@ import {
   IconButton,
   MenuItem,
   withStyles,
-  MuiThemeProvider
+  MuiThemeProvider,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import { setLayoutSettings } from "app/redux/actions/LayoutActions";
@@ -16,16 +16,16 @@ import { isMdScreen } from "utils";
 import NotificationBar from "../SharedCompoents/NotificationBar";
 import { Link } from "react-router-dom";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    backgroundColor: theme.palette.primary.main
-  }
+    backgroundColor: theme.palette.primary.main,
+  },
 });
 
 class Layout1Topbar extends Component {
   state = {};
 
-  updateSidebarMode = sidebarSettings => {
+  updateSidebarMode = (sidebarSettings) => {
     let { settings, setLayoutSettings } = this.props;
 
     setLayoutSettings({
@@ -34,9 +34,9 @@ class Layout1Topbar extends Component {
         ...settings.layout1Settings,
         leftSidebar: {
           ...settings.layout1Settings.leftSidebar,
-          ...sidebarSettings
-        }
-      }
+          ...sidebarSettings,
+        },
+      },
     });
   };
 
@@ -66,14 +66,26 @@ class Layout1Topbar extends Component {
         <div className="topbar">
           <div
             className={`topbar-hold ${className}`}
-            style={Object.assign({}, { backgroundColor: topbarTheme.palette.primary.main }, style)}
+            style={Object.assign(
+              {},
+              { backgroundColor: topbarTheme.palette.primary.main },
+              style
+            )}
           >
             <div className="flex flex-space-between flex-middle h-100">
               <div className="flex">
-                <IconButton onClick={this.handleSidebarToggle} className="hide-on-lg">
+                <IconButton
+                  onClick={this.handleSidebarToggle}
+                  className="hide-on-lg"
+                >
                   <Icon>menu</Icon>
                 </IconButton>
 
+                <div className="hide-on-mobile">
+                  <Link className="flex flex-middle" to="/">
+                    <Icon style={{ color: "#fff" }} fontSize={'large'}> home </Icon>
+                  </Link>
+                </div>
               </div>
               <div className="flex flex-middle">
                 <NotificationBar />
@@ -87,12 +99,6 @@ class Layout1Topbar extends Component {
                     />
                   }
                 >
-                  <MenuItem style={{ minWidth: 185 }}>
-                    <Link className="flex flex-middle" to="/">
-                      <Icon> home </Icon>
-                      <span className="pl-16"> Home </span>
-                    </Link>
-                  </MenuItem>
                   <MenuItem style={{ minWidth: 185 }}>
                     <Link
                       className="flex flex-middle"
@@ -123,13 +129,13 @@ class Layout1Topbar extends Component {
 Layout1Topbar.propTypes = {
   setLayoutSettings: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  settings: PropTypes.object.isRequired
+  settings: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   setLayoutSettings: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  settings: state.layout.settings
+  settings: state.layout.settings,
 });
 
 export default withStyles(styles, { withTheme: true })(
