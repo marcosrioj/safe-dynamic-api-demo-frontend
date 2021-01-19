@@ -23,7 +23,7 @@ const StatCards = ({theme}) => {
               group
             </Icon>
             <div className="ml-12">
-              <small className="text-muted">New Leads</small>
+              <small className="text-muted">New Clients</small>
               <h6 className="m-0 mt-4 text-primary font-weight-500">3050</h6>
             </div>
           </div>

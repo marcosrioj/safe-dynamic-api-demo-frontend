@@ -9,9 +9,7 @@ import DoughnutChart from "../charts/echarts/Doughnut";
 import ModifiedAreaChart from "./shared/ModifiedAreaChart";
 import StatCards from "./shared/StatCards";
 import TableCard from "./shared/TableCard";
-import RowCards from "./shared/RowCards";
 import StatCards2 from "./shared/StatCards2";
-import UpgradeCard from "./shared/UpgradeCard";
 import Campaigns from "./shared/Campaigns";
 import { withStyles } from "@material-ui/styles";
 
@@ -64,9 +62,6 @@ class Dashboard1 extends Component {
 
               <StatCards2/>
 
-              <h4 className="card-title text-muted mb-16">Ongoing Projects</h4>
-              <RowCards />
-
             </Grid>
 
             <Grid item lg={4} md={4} sm={12} xs={12}>
@@ -82,8 +77,6 @@ class Dashboard1 extends Component {
                   ]}
                 />
               </Card>
-
-              <UpgradeCard/>
 
               <Campaigns/>
 

@@ -19,7 +19,7 @@ const StatCards2 = () => {
               <Icon className="text-green">trending_up</Icon>
             </Fab>
             <h5 className="font-weight-500 text-green m-0 ml-12">
-              Active Users
+              Active Clients
             </h5>
           </div>
           <div className="pt-16 flex flex-middle">

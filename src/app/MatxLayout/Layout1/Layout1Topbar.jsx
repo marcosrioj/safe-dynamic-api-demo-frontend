@@ -11,11 +11,10 @@ import { connect } from "react-redux";
 import { setLayoutSettings } from "app/redux/actions/LayoutActions";
 import { logoutUser } from "app/redux/actions/UserActions";
 import { PropTypes } from "prop-types";
-import { MatxMenu, MatxSearchBox } from "matx";
+import { MatxMenu } from "matx";
 import { isMdScreen } from "utils";
 import NotificationBar from "../SharedCompoents/NotificationBar";
 import { Link } from "react-router-dom";
-import ShoppingCart from "../SharedCompoents/ShoppingCart";
 
 const styles = theme => ({
   root: {
@@ -75,26 +74,9 @@ class Layout1Topbar extends Component {
                   <Icon>menu</Icon>
                 </IconButton>
 
-                <div className="hide-on-mobile">
-                  <IconButton>
-                    <Icon>mail_outline</Icon>
-                  </IconButton>
-
-                  <IconButton>
-                    <Icon>web_asset</Icon>
-                  </IconButton>
-
-                  <IconButton>
-                    <Icon>star_outline</Icon>
-                  </IconButton>
-                </div>
               </div>
               <div className="flex flex-middle">
-                <MatxSearchBox />
-
                 <NotificationBar />
-
-                <ShoppingCart></ShoppingCart>
 
                 <MatxMenu
                   menuButton={
@@ -119,13 +101,6 @@ class Layout1Topbar extends Component {
                       <Icon> person </Icon>
                       <span className="pl-16"> Profile </span>
                     </Link>
-                  </MenuItem>
-                  <MenuItem
-                    className="flex flex-middle"
-                    style={{ minWidth: 185 }}
-                  >
-                    <Icon> settings </Icon>
-                    <span className="pl-16"> Settings </span>
                   </MenuItem>
                   <MenuItem
                     onClick={this.handleSignOut}

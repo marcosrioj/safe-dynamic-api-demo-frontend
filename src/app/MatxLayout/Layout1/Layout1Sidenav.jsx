@@ -7,13 +7,13 @@ import {
   MenuItem,
   Tooltip,
   IconButton,
-  MuiThemeProvider
+  MuiThemeProvider,
 } from "@material-ui/core";
 
 import { connect } from "react-redux";
 import {
   setLayoutSettings,
-  setDefaultSettings
+  setDefaultSettings,
 } from "app/redux/actions/LayoutActions";
 import { logoutUser } from "app/redux/actions/UserActions";
 import { withRouter } from "react-router-dom";
@@ -23,20 +23,20 @@ import Brand from "../SharedCompoents/Brand";
 import SidenavTheme from "../MatxTheme/SidenavTheme";
 import { isMdScreen } from "utils";
 
-const styles = theme => ({});
+const styles = (theme) => ({});
 
-const IconButtonWhite = withStyles(theme => ({
+const IconButtonWhite = withStyles((theme) => ({
   root: {
     // color: theme.palette.getContrastText(purple[500]),
     backgroundColor: "transparent",
-    padding: "5px"
-  }
+    padding: "5px",
+  },
 }))(IconButton);
 
 const IconSmall = withStyles(() => ({
   root: {
-    fontSize: "1rem"
-  }
+    fontSize: "1rem",
+  },
 }))(Icon);
 
 class Layout1Sidenav extends Component {
@@ -46,21 +46,19 @@ class Layout1Sidenav extends Component {
   };
 
   componentWillMount() {
-
     // CLOSE SIDENAV ON ROUTE CHANGE ON MOBILE
     this.unlistenRouteChange = this.props.history.listen((location, action) => {
       if (isMdScreen()) {
         this.updateSidebarMode({ mode: "close" });
       }
     });
-
   }
 
   componentWillUnmount() {
     this.unlistenRouteChange();
   }
 
-  updateSidebarMode = sidebarSettings => {
+  updateSidebarMode = (sidebarSettings) => {
     let { settings, setLayoutSettings, setDefaultSettings } = this.props;
     const updatedSettings = {
       ...settings,
@@ -68,9 +66,9 @@ class Layout1Sidenav extends Component {
         ...settings.layout1Settings,
         leftSidebar: {
           ...settings.layout1Settings.leftSidebar,
-          ...sidebarSettings
-        }
-      }
+          ...sidebarSettings,
+        },
+      },
     };
     setLayoutSettings(updatedSettings);
     setDefaultSettings(updatedSettings);
@@ -112,26 +110,10 @@ class Layout1Sidenav extends Component {
             {user.displayName}
           </span>
           <div className="user__menu">
-            <MatxMenu
-              menuButton={
-                <Tooltip title="Settings">
-                  <IconButtonWhite
-                    aria-label="Delete"
-                    className=""
-                    size="small"
-                  >
-                    <IconSmall> settings </IconSmall>
-                  </IconButtonWhite>
-                </Tooltip>
-              }
-            >
+            <MatxMenu>
               <MenuItem className="flex flex-middle" style={{ minWidth: 185 }}>
                 <Icon> home </Icon>
                 <span className="pl-16"> Home </span>
-              </MenuItem>
-              <MenuItem className="flex flex-middle" style={{ minWidth: 185 }}>
-                <Icon> settings </Icon>
-                <span className="pl-16"> Account Setting </span>
               </MenuItem>
             </MatxMenu>
 
@@ -166,12 +148,12 @@ class Layout1Sidenav extends Component {
 
         <div className="sidenav">
           <div className="sidenav__hold">
-            {(
+            {
               <Fragment>
                 {this.renderLogoSwitch()}
                 <Sidenav>{this.renderUser()}</Sidenav>
               </Fragment>
-            )}
+            }
           </div>
         </div>
       </MuiThemeProvider>
@@ -184,15 +166,15 @@ Layout1Sidenav.propTypes = {
   setDefaultSettings: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  settings: PropTypes.object.isRequired
+  settings: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   setDefaultSettings: PropTypes.func.isRequired,
   setLayoutSettings: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   user: state.user,
-  settings: state.layout.settings
+  settings: state.layout.settings,
 });
 
 export default withStyles(styles, { withTheme: true })(
@@ -200,7 +182,7 @@ export default withStyles(styles, { withTheme: true })(
     connect(mapStateToProps, {
       setLayoutSettings,
       setDefaultSettings,
-      logoutUser
+      logoutUser,
     })(Layout1Sidenav)
   )
 );

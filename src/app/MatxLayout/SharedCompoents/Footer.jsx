@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, MuiThemeProvider } from "@material-ui/core";
+import { withStyles, MuiThemeProvider, Button } from "@material-ui/core";
 import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet";
@@ -20,7 +20,16 @@ const Footer = ({ theme, settings }) => {
       </Helmet>
       <div className="footer flex flex-middle">
         <div className="flex flex-middle container px-sm-30 w-100">
-
+          <a href="http://marcoslima.com/products">
+            <Button variant="contained" color="secondary">
+              Buy SafeDynamicAPI
+            </Button>
+          </a>
+          <span className="m-auto"></span>
+          <p className="m-0">
+            This is an example Frontend/App project that uses the SafeDynamicAPI
+            product
+          </p>
         </div>
       </div>
     </MuiThemeProvider>
@@ -28,16 +37,14 @@ const Footer = ({ theme, settings }) => {
 };
 
 Footer.propTypes = {
-  settings: PropTypes.object.isRequired
+  settings: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  settings: state.layout.settings
+const mapStateToProps = (state) => ({
+  settings: state.layout.settings,
 });
 
-export default withStyles({}, { withTheme: true })(
-  connect(
-    mapStateToProps,
-    {}
-  )(Footer)
-);
+export default withStyles(
+  {},
+  { withTheme: true }
+)(connect(mapStateToProps, {})(Footer));
