@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, MuiThemeProvider, Button } from "@material-ui/core";
+import { withStyles, MuiThemeProvider } from "@material-ui/core";
 import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet";
