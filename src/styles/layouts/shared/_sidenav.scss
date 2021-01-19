@@ -33,10 +33,10 @@
     }
     .brand-area {
       width: $sidenav-width;
-      padding: 13px 18px 13px 24px;
+      padding: 13px 18px 13px 18px !important;
       .brand {
         img {
-          height: 24px;
+          height: 48px;
           margin-right: 12px;
         }
         .brand__text {
@@ -51,7 +51,7 @@
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-      padding: .5rem 12px;
+      padding: 0.5rem 12px;
       margin: 2rem 0;
       border-radius: 4px;
       background-color: rgba(0, 0, 0, 0.05);
@@ -80,8 +80,6 @@
       }
     }
   }
-
-  
 }
 
 .sidenav-mobile {
@@ -107,17 +105,19 @@
     display: flex;
     height: 44px;
     border-radius: 4px;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     justify-content: space-between;
     button {
       padding: 0 16px;
     }
-    &.active, &.active:hover {
+    &.active,
+    &.active:hover {
       color: $white !important;
       // background: $primary;
       box-shadow: $elevation-z3;
     }
-    &.has-submenu.open, &:hover {
+    &.has-submenu.open,
+    &:hover {
       background-color: rgba(0, 0, 0, 0.05);
     }
     // &.active {
@@ -172,7 +172,8 @@
   border-radius: 12px;
   line-height: 20px;
   font-weight: 500;
-  &.bg-primary, &.bg-error {
+  &.bg-primary,
+  &.bg-error {
     color: $white !important;
   }
 }
