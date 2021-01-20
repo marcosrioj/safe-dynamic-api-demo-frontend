@@ -4,17 +4,6 @@ import { BACKEND_URL } from "appSettings";
 import localStorageService from "./localStorageService";
 
 class JwtAuthService {
-
-  user = {
-    userId: "1",
-    role: 'ADMIN',
-    displayName: "Jason Alexander",
-    email: "jasonalexander@gmail.com",
-    photoURL: "/assets/images/face-6.jpg",
-    age: 25,
-    token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh"
-  };
-
   // You need to send http request with email and passsword to your server in this method
   // Your server will return user object & a Token
   // User should have role property

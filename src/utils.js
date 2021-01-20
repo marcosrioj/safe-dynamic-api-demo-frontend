@@ -1,4 +1,5 @@
 import moment from "moment";
+import axios from "axios";
 import CustomStore from "devextreme/data/custom_store";
 
 export function debounce(func, wait, immediate) {
@@ -255,67 +256,44 @@ export function createDevExpressStore(apiBase) {
         params += `${allFilters}&`;
       }
 
-      return fetch(`${apiBase}${params}`)
-        .then((response) => response.json())
-        .then((data) => {
+      return axios.get(`${apiBase}${params}`).then((res) => {
+        if (res.data.records) {
           return {
-            data: data.records,
-            totalCount: data.results ? data.results : 0,
+            data: res.data.records,
+            totalCount: res.data.results ? res.data.results : 0,
           };
-        })
-        .catch(() => {
+        } else {
           // eslint-disable-next-line no-throw-literal
           throw "Data Loading Error";
-        });
+        }
+      });
     },
     update: function (id, data) {
-      return fetch(`${apiBase}/${id}`, {
-        method: "PUT",
-        mode: "cors",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((dataUpdate) => {})
-        .catch((e) => {
+      return axios.put(`${apiBase}/${id}`, data).then((res) => {
+        if (res.data) {
+        } else {
           // eslint-disable-next-line no-throw-literal
-          throw "Data Updating Error";
-        });
+          throw "Data Loading Error";
+        }
+      });
     },
     insert: function (data) {
-      return fetch(`${apiBase}`, {
-        method: "POST",
-        mode: "cors",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((dataUpdate) => {})
-        .catch((e) => {
-          console.log(e);
+      return axios.post(`${apiBase}`, data).then((res) => {
+        if (res.data) {
+        } else {
           // eslint-disable-next-line no-throw-literal
-          throw "Data Inserting Error";
-        });
+          throw "Data Loading Error";
+        }
+      });
     },
     remove: function (id) {
-      return fetch(`${apiBase}/${id}`, {
-        method: "DELETE",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((dataUpdate) => {})
-        .catch((e) => {
-          console.log(e);
+      return axios.delete(`${apiBase}/${id}`).then((res) => {
+        if (res.data) {
+        } else {
           // eslint-disable-next-line no-throw-literal
-          throw "Data Deleting Error";
-        });
+          throw "Data Loading Error";
+        }
+      });
     },
   });
 

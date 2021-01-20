@@ -19,19 +19,19 @@ import { Breadcrumb, SimpleCard } from "matx";
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
 const store = createDevExpressStore(urlBase);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
 }
 
-class AppProduct extends React.Component {
+class AppClient extends React.Component {
   render() {
     return (
       <div className="m-sm-30">
         <div className="mb-sm-30">
-          <Breadcrumb routeSegments={[{ name: "Products" }]} />
+          <Breadcrumb routeSegments={[{ name: "Clients" }]} />
         </div>
         <div className="py-12" />
         <SimpleCard>
@@ -49,7 +49,7 @@ class AppProduct extends React.Component {
               allowAdding={true}
               allowDeleting={true}
             >
-              <Popup title="Product" showTitle={true} width={700} height={325}>
+              <Popup title="Client" showTitle={true} width={700} height={325}>
                 <Position my="top" at="top" of={window} />
               </Popup>
               <Form>
@@ -58,23 +58,27 @@ class AppProduct extends React.Component {
                     dataField="name"
                     dataType="string"
                     validationRules={[
-                      { type: "required", message: "Name is required." },
+                      { type: "required", message: "Genre is required." },
                     ]}
+                  />
+                  <Item dataField="email" dataType="string" />
+                  <Item dataField="mobile_number" dataType="string" />
+                  <Item
+                    dataField="genre"
+                    editorType="dxSelectBox"
+                    editorOptions={{
+                      items: ["male", "female", "others"],
+                      value: "",
+                    }}
                   />
                   <Item
-                    dataField="price"
-                    dataType="number"
+                    dataField="is_active"
+                    dataType="bool"
                     validationRules={[
-                      { type: "required", message: "Price is required." },
+                      { type: "required", message: "IsActive is required." },
                     ]}
                   />
-                  <Item
-                    dataField="stock"
-                    dataType="number"
-                    validationRules={[
-                      { type: "required", message: "Stock is required." },
-                    ]}
-                  />
+                  <Item dataField="user_id" dataType="number" />
                 </Item>
               </Form>
             </Editing>
@@ -88,8 +92,8 @@ class AppProduct extends React.Component {
               cellRender={photoRender}
             />
             <Column dataField="name" dataType="string" />
-            <Column dataField="price" dataType="number" format="currency" />
-            <Column dataField="stock" dataType="number" />
+            <Column dataField="email" dataType="string" />
+            <Column dataField="mobile_number" dataType="string" />
             <Paging defaultPageSize={5} />
             <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} />
           </DataGrid>
@@ -99,4 +103,4 @@ class AppProduct extends React.Component {
   }
 }
 
-export default AppProduct;
+export default AppClient;

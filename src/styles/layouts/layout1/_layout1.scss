@@ -251,6 +251,10 @@
   }
 }
 
+.dx-loadindicator-segment-inner {
+  border-color: $primary $primary transparent !important;
+}
+
 .dx-texteditor.dx-state-ative::before {
   border-bottom-color: $primary !important;
 }
