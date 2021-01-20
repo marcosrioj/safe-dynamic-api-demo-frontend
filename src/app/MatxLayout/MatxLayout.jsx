@@ -12,6 +12,9 @@ import {
 import { isEqual, merge } from "lodash";
 import { isMdScreen, getQueryParam } from "utils";
 
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.material.blue.light.compact.css';
+
 class MatxLayout extends Component {
   constructor(props, context) {
     super(props);

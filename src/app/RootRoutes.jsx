@@ -6,6 +6,8 @@ import sessionRoutes from "./views/sessions/SessionRoutes";
 
 import materialRoutes from "./views/material-kit/MaterialRoutes";
 
+import productRoutes from "./views/products/ProductRoutes";
+
 import formsRoutes from "./views/forms/FormsRoutes";
 import mapRoutes from "./views/map/MapRoutes";
 
@@ -27,6 +29,7 @@ const routes = [
   ...sessionRoutes,
   ...dashboardRoutes,
   ...materialRoutes,
+  ...productRoutes,
   ...formsRoutes,
   ...mapRoutes,
   ...redirectRoute,

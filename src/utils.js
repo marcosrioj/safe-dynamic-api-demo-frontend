@@ -1,12 +1,13 @@
 import moment from "moment";
+import CustomStore from "devextreme/data/custom_store";
 
 export function debounce(func, wait, immediate) {
   var timeout;
-  return function() {
+  return function () {
     var context = this,
       args = arguments;
     clearTimeout(timeout);
-    timeout = setTimeout(function() {
+    timeout = setTimeout(function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     }, wait);
@@ -72,7 +73,7 @@ export function scrollTo(scrollableElement, elmID) {
   if (stopY > startY) {
     for (var i = startY; i < stopY; i += step) {
       setTimeout(
-        (function(leapY) {
+        (function (leapY) {
           return () => {
             scrollableElement.scrollTo(0, leapY);
           };
@@ -87,7 +88,7 @@ export function scrollTo(scrollableElement, elmID) {
   }
   for (let i = startY; i > stopY; i -= step) {
     setTimeout(
-      (function(leapY) {
+      (function (leapY) {
         return () => {
           scrollableElement.scrollTo(0, leapY);
         };
@@ -129,7 +130,7 @@ export function getQueryParam(prop) {
     window.location.href.slice(window.location.href.indexOf("?") + 1)
   );
   var definitions = search.split("&");
-  definitions.forEach(function(val, key) {
+  definitions.forEach(function (val, key) {
     var parts = val.split("=", 2);
     params[parts[0]] = parts[1];
   });
@@ -138,7 +139,185 @@ export function getQueryParam(prop) {
 
 export function classList(classes) {
   return Object.entries(classes)
-    .filter(entry => entry[1])
-    .map(entry => entry[0])
+    .filter((entry) => entry[1])
+    .map((entry) => entry[0])
     .join(" ");
+}
+
+function isNotEmpty(value) {
+  return value !== undefined && value !== null && value !== "";
+}
+
+function getFilterParsed(item) {
+  const prop = item[0];
+  let operator = item[1];
+  const term = item[2];
+
+  switch (operator) {
+    case ">":
+      operator = "gt";
+      break;
+    case ">=":
+      operator = "ge";
+      break;
+    case "<=":
+      operator = "le";
+      break;
+    case "<":
+      operator = "lt";
+      break;
+    case "=":
+      operator = "eq";
+      break;
+    case "<>":
+      operator = "neq";
+      break;
+    case "contains":
+      operator = "cs";
+      break;
+    case "notcontains":
+      operator = "ncs";
+      break;
+    case "startswith":
+      operator = "sw";
+      break;
+    case "endswith":
+      operator = "ew";
+      break;
+
+    default:
+      break;
+  }
+
+  return `filter=${prop},${operator},${term}`;
+}
+
+function getAllFilters(filtersParam) {
+  let filters = "";
+  let just1Filter = true;
+  if (
+    filtersParam.length === 3 &&
+    (Array.isArray(filtersParam[0]) ||
+      Array.isArray(filtersParam[1]) ||
+      Array.isArray(filtersParam[2]))
+  ) {
+    just1Filter = false;
+  }
+
+  if (just1Filter) {
+    const item = [filtersParam[0], filtersParam[1], filtersParam[2]];
+    const itemParsed = getFilterParsed(item);
+    filters += `${itemParsed}&`;
+  } else {
+    for (const i in filtersParam) {
+      const item = filtersParam[i];
+
+      if (Array.isArray(item) && item.length === 3) {
+        if (Array.isArray(item[0])) {
+          const itemsParsed = getAllFilters(item);
+          filters += `${itemsParsed}&`;
+        } else {
+          const itemParsed = getFilterParsed(item);
+          filters += `${itemParsed}&`;
+        }
+      }
+    }
+  }
+  return filters;
+}
+
+export function createDevExpressStore(apiBase) {
+  const store = new CustomStore({
+    key: "id",
+    load: function (loadOptions) {
+      let params = "?";
+
+      //Page
+      const page = loadOptions.skip / loadOptions.take + 1;
+      if (isNotEmpty(page)) {
+        params += `page=${page},${loadOptions.take}&`;
+      } else {
+        params += `page=1,${loadOptions.take}&`;
+      }
+
+      //Sort
+      if (loadOptions.sort) {
+        for (const i in loadOptions.sort) {
+          const item = loadOptions.sort[i];
+          const way = item.desc ? "desc" : "asc";
+          params += `order=${item.selector},${way}&`;
+        }
+      }
+
+      //Filter
+      if (loadOptions.filter) {
+        const allFilters = getAllFilters(loadOptions.filter);
+        params += `${allFilters}&`;
+      }
+
+      return fetch(`${apiBase}${params}`)
+        .then((response) => response.json())
+        .then((data) => {
+          return {
+            data: data.records,
+            totalCount: data.results ? data.results : 0,
+          };
+        })
+        .catch(() => {
+          // eslint-disable-next-line no-throw-literal
+          throw "Data Loading Error";
+        });
+    },
+    update: function (id, data) {
+      return fetch(`${apiBase}/${id}`, {
+        method: "PUT",
+        mode: "cors",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((dataUpdate) => {})
+        .catch((e) => {
+          // eslint-disable-next-line no-throw-literal
+          throw "Data Updating Error";
+        });
+    },
+    insert: function (data) {
+      return fetch(`${apiBase}`, {
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((dataUpdate) => {})
+        .catch((e) => {
+          console.log(e);
+          // eslint-disable-next-line no-throw-literal
+          throw "Data Inserting Error";
+        });
+    },
+    remove: function (id) {
+      return fetch(`${apiBase}/${id}`, {
+        method: "DELETE",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((dataUpdate) => {})
+        .catch((e) => {
+          console.log(e);
+          // eslint-disable-next-line no-throw-literal
+          throw "Data Deleting Error";
+        });
+    },
+  });
+
+  return store;
 }

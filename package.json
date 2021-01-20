@@ -16,6 +16,8 @@
     "clsx": "^1.0.4",
     "css-vars-ponyfill": "^2.1.2",
     "date-fns": "^2.0.0-alpha.34",
+    "devextreme": "20.2.4",
+    "devextreme-react": "20.2.4",
     "downshift": "^3.2.10",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.15-beta.0",

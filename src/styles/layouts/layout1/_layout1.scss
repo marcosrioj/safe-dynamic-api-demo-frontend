@@ -45,12 +45,10 @@
       .content {
         position: relative;
       }
-      
     }
   }
 
   // Fixed Topbar
-
 
   // sidenav full
   &.sidenav-full {
@@ -65,7 +63,6 @@
       width: calc(100% - #{$sidenav-width});
       vertical-align: top;
       margin-left: $sidenav-width;
-      
     }
   }
 
@@ -84,7 +81,7 @@
         padding-right: 6px;
         padding-left: 10px;
         .sidenav__user {
-          padding: .5rem 18px;
+          padding: 0.5rem 18px;
           background: none;
           .username-photo {
             align-items: flex-start;
@@ -142,7 +139,7 @@
           padding-left: 20px;
           padding-right: 20px;
           .sidenav__user {
-            padding: .5rem 12px;
+            padding: 0.5rem 12px;
             background-color: rgba(0, 0, 0, 0.05);
             .username-photo {
               align-items: center;
@@ -200,7 +197,7 @@
   &.sidenav-close {
     .sidenav {
       // width: 0px;
-      left: -#{$sidenav-width}
+      left: -#{$sidenav-width};
     }
     .content-wrap {
       width: 100%;
@@ -229,4 +226,35 @@
       }
     }
   }
+}
+
+.dx-datagrid {
+  .dx-link {
+    color: $primary !important;
+  }
+}
+
+.dx-button-mode-text.dx-button-default {
+  color: $primary !important;
+}
+
+.dx-pager {
+  .dx-page-sizes {
+    .dx-selection {
+      background-color: $primary !important;
+    }
+  }
+  .dx-pages {
+    .dx-selection {
+      background-color: $primary !important;
+    }
+  }
+}
+
+.dx-texteditor.dx-state-ative::before {
+  border-bottom-color: $primary !important;
+}
+
+.dx-texteditor.dx-state-focused::before {
+  border-bottom-color: $primary !important;
 }
