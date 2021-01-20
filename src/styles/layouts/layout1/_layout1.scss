@@ -258,3 +258,12 @@
 .dx-texteditor.dx-state-focused::before {
   border-bottom-color: $primary !important;
 }
+
+.dx-datagrid-headers .dx-datagrid-table .dx-row > td {
+  font-size: 14px !important;
+}
+
+.dx-toolbar-button.dx-toolbar-text-auto-hide .dx-button .dx-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+}

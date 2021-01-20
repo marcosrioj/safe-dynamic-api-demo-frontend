@@ -22,6 +22,10 @@ import { createDevExpressStore } from "utils";
 const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
 const store = createDevExpressStore(urlBase);
 
+function photoRender(data) {
+  return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
+}
+
 class AppProduct extends React.Component {
   render() {
     return (
@@ -57,7 +61,13 @@ class AppProduct extends React.Component {
               </Form>
             </Editing>
 
-            <Column dataField="id" dataType="number" />
+            <Column dataField="id" dataType="number" width={75} />
+            <Column
+              dataField="photo"
+              width={100}
+              allowSorting={false}
+              cellRender={photoRender}
+            />
             <Column dataField="name" dataType="string" />
             <Column dataField="price" dataType="number" format="currency" />
             <Column dataField="stock" dataType="number" />
