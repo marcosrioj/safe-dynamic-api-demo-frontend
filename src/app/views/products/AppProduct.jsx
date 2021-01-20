@@ -66,6 +66,7 @@ class AppProduct extends React.Component {
               dataField="photo"
               width={100}
               allowSorting={false}
+              allowFiltering={false}
               cellRender={photoRender}
             />
             <Column dataField="name" dataType="string" />
