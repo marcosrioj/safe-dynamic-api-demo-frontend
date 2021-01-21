@@ -10,6 +10,7 @@ import clientRoutes from "./views/clients/ClientRoutes";
 import productRoutes from "./views/products/ProductRoutes";
 import notificationRoutes from "./views/notifications/NotificationRoutes";
 import campaignRoutes from "./views/campaigns/CampaignRoutes";
+import orderRoutes from "./views/orders/OrderRoutes";
 
 import formsRoutes from "./views/forms/FormsRoutes";
 import mapRoutes from "./views/map/MapRoutes";
@@ -18,14 +19,14 @@ const redirectRoute = [
   {
     path: "/",
     exact: true,
-    component: () => <Redirect to="/dashboard/analytics" />
-  }
+    component: () => <Redirect to="/dashboard/analytics" />,
+  },
 ];
 
 const errorRoute = [
   {
-    component: () => <Redirect to="/session/404" />
-  }
+    component: () => <Redirect to="/session/404" />,
+  },
 ];
 
 const routes = [
@@ -36,10 +37,11 @@ const routes = [
   ...productRoutes,
   ...notificationRoutes,
   ...campaignRoutes,
+  ...orderRoutes,
   ...formsRoutes,
   ...mapRoutes,
   ...redirectRoute,
-  ...errorRoute
+  ...errorRoute,
 ];
 
 export default routes;
