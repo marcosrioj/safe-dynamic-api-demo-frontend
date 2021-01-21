@@ -20,7 +20,8 @@ import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
-const store = createDevExpressStore(urlBase);
+const fiedlsToGet = ['id', 'name', 'photo', 'price', 'stock'];
+const store = createDevExpressStore(urlBase, fiedlsToGet);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;

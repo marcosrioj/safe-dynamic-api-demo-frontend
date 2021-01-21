@@ -12,7 +12,7 @@ import DataGrid, {
   Form,
   Sorting,
 } from "devextreme-react/data-grid";
-import { Item } from "devextreme-react/form";
+import { Item, RadioGroup } from "devextreme-react/form";
 import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
 
@@ -20,7 +20,17 @@ import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
-const store = createDevExpressStore(urlBase);
+const fiedlsToGet = [
+  "id",
+  "name",
+  "email",
+  "photo",
+  "mobile_number",
+  "is_active",
+  "genre",
+  "biography",
+];
+const store = createDevExpressStore(urlBase, fiedlsToGet);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
@@ -49,7 +59,7 @@ class AppClient extends React.Component {
               allowAdding={true}
               allowDeleting={true}
             >
-              <Popup title="Client" showTitle={true} width={700} height={325}>
+              <Popup title="Client" showTitle={true} width={700} height={525}>
                 <Position my="top" at="top" of={window} />
               </Popup>
               <Form>
@@ -71,14 +81,24 @@ class AppClient extends React.Component {
                       value: "",
                     }}
                   />
+                </Item>
+                <div className="py-12" />
+                <Item
+                  itemType="group"
+                  caption="Others"
+                  colCount={2}
+                  colSpan={2}
+                >
                   <Item
                     dataField="is_active"
-                    dataType="bool"
-                    validationRules={[
-                      { type: "required", message: "IsActive is required." },
-                    ]}
+                    dataType="string"
+                    editorType="dxSelectBox"
+                    editorOptions={{
+                      items: [true, false],
+                      value: true,
+                    }}
                   />
-                  <Item dataField="user_id" dataType="number" />
+                  <Item dataField="biography" dataType="string" colSpan={2} />
                 </Item>
               </Form>
             </Editing>
@@ -94,6 +114,11 @@ class AppClient extends React.Component {
             <Column dataField="name" dataType="string" />
             <Column dataField="email" dataType="string" />
             <Column dataField="mobile_number" dataType="string" />
+            <Column dataField="genre" dataType="string" />
+
+            <Column dataField="is_active" dataType="string" visible={false} />
+            <Column dataField="biography" dataType="string" visible={false} />
+
             <Paging defaultPageSize={5} />
             <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} />
           </DataGrid>

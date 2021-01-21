@@ -227,7 +227,7 @@ function getAllFilters(filtersParam) {
   return filters;
 }
 
-export function createDevExpressStore(apiBase) {
+export function createDevExpressStore(apiBase, fieldsToGet) {
   const store = new CustomStore({
     key: "id",
     load: function (loadOptions) {
@@ -254,6 +254,11 @@ export function createDevExpressStore(apiBase) {
       if (loadOptions.filter) {
         const allFilters = getAllFilters(loadOptions.filter);
         params += `${allFilters}&`;
+      }
+
+      //Fields
+      if (isNotEmpty(fieldsToGet) && fieldsToGet.length > 0) {
+        params += `include=${fieldsToGet.join(",")}&`;
       }
 
       return axios.get(`${apiBase}${params}`).then((res) => {
