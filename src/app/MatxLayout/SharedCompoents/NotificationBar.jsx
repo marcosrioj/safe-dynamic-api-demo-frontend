@@ -6,7 +6,7 @@ import {
   Card,
   Button,
   IconButton,
-  Drawer
+  Drawer,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import {
   getNotification,
   deleteAllNotification,
-  deleteNotification
+  deleteNotification,
 } from "../../redux/actions/NotificationActions";
 
 function NotificationBar(props) {
@@ -24,10 +24,10 @@ function NotificationBar(props) {
     container,
     theme,
     settings,
-    notification: notifcationList = [],
+    notification: notificationList = [],
     getNotification,
     deleteAllNotification,
-    deleteNotification
+    deleteNotification,
   } = props;
 
   const [panelOpen, setPanelOpen] = React.useState(false);
@@ -39,7 +39,6 @@ function NotificationBar(props) {
     setPanelOpen(!panelOpen);
   }
   const parentThemePalette = theme.palette;
-  // console.log(theme);
 
   return (
     <MuiThemeProvider theme={settings.themes[settings.activeTheme]}>
@@ -49,7 +48,7 @@ function NotificationBar(props) {
           color:
             parentThemePalette.type === "light"
               ? parentThemePalette.text.secondary
-              : parentThemePalette.text.primary
+              : parentThemePalette.text.primary,
         }}
       >
         <Badge color="secondary" badgeContent={5}>
@@ -65,7 +64,7 @@ function NotificationBar(props) {
         open={panelOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true
+          keepMounted: true,
         }}
       >
         <div className="notification">
@@ -74,11 +73,8 @@ function NotificationBar(props) {
             <h5 className="ml-8 my-0 font-weight-500">Notifications</h5>
           </div>
 
-          {notifcationList.map(notification => (
-            <div
-              key={notification.id}
-              className="notification__card position-relative"
-            >
+          {notificationList.map((notification, i) => (
+            <div key={i} className="notification__card position-relative">
               <IconButton
                 size="small"
                 className="delete-button bg-light-gray mr-24"
@@ -88,35 +84,38 @@ function NotificationBar(props) {
                   clear
                 </Icon>
               </IconButton>
-              <Link to={`/${notification.path}`} onClick={handleDrawerToggle}>
-                <Card className="mx-16 mb-24" elevation={3}>
-                  <div className="card__topbar flex flex-middle flex-space-between p-8 bg-light-gray">
-                    <div className="flex">
-                      <div className="card__topbar__button">
-                        <Icon
-                          className="card__topbar__icon"
-                          fontSize="small"
-                          color={notification.icon.color}
-                        >
-                          {notification.icon.name}
-                        </Icon>
-                      </div>
-                      <span className="ml-4 font-weight-500 text-muted">
-                        {notification.heading}
-                      </span>
+              <Card className="mx-16 mb-24" elevation={3}>
+                <div className="card__topbar flex flex-middle flex-space-between p-8 bg-light-gray">
+                  <div className="flex">
+                    <div className="card__topbar__button">
+                      <Icon
+                        className="card__topbar__icon"
+                        fontSize="small"
+                        style={{
+                          color:
+                            notification.type === "alert"
+                              ? "#FF3D57"
+                              : "#1976d2",
+                        }}
+                      >
+                        {notification.type === "alert"
+                          ? "notifications"
+                          : "chat"}
+                      </Icon>
                     </div>
-                    <small className="card__topbar__time text-muted">
-                      {getTimeDifference(new Date(notification.timestamp))} ago
-                    </small>
+                    <span className="ml-4 font-weight-500 text-muted">
+                      {notification.title}
+                    </span>
                   </div>
-                  <div className="px-16 pt-8 pb-16">
-                    <p className="m-0">{notification.title}</p>
-                    <small className="text-muted">
-                      {notification.subtitle}
-                    </small>
-                  </div>
-                </Card>
-              </Link>
+                  <small className="card__topbar__time text-muted">
+                    {getTimeDifference(new Date(notification.timestamp))} ago
+                  </small>
+                </div>
+                <div className="px-16 pt-8 pb-16">
+                  <p className="m-0">{notification.title}</p>
+                  <small className="text-muted">{notification.message}</small>
+                </div>
+              </Card>
             </div>
           ))}
 
@@ -131,20 +130,24 @@ function NotificationBar(props) {
 
 NotificationBar.propTypes = {
   settings: PropTypes.object.isRequired,
-  notification: PropTypes.array.isRequired
+  notification: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   getNotification: PropTypes.func.isRequired,
   deleteNotification: PropTypes.func.isRequired,
   deleteAllNotification: PropTypes.func.isRequired,
   notification: state.notification,
-  settings: state.layout.settings
+  settings: state.layout.settings,
 });
 
-export default withStyles({}, { withTheme: true })(
-  connect(
-    mapStateToProps,
-    { getNotification, deleteNotification, deleteAllNotification }
-  )(NotificationBar)
+export default withStyles(
+  {},
+  { withTheme: true }
+)(
+  connect(mapStateToProps, {
+    getNotification,
+    deleteNotification,
+    deleteAllNotification,
+  })(NotificationBar)
 );

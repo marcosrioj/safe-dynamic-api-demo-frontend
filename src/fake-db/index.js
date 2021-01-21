@@ -8,7 +8,6 @@ import "./db/chat";
 import "./db/todos";
 import "./db/list";
 import "./db/scrumBoard";
-import "./db/notification";
 import "./db/ecommerce";
 
 Mock.onAny().passThrough();
