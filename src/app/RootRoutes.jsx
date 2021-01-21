@@ -9,6 +9,7 @@ import materialRoutes from "./views/material-kit/MaterialRoutes";
 import clientRoutes from "./views/clients/ClientRoutes";
 import productRoutes from "./views/products/ProductRoutes";
 import notificationRoutes from "./views/notifications/NotificationRoutes";
+import campaignRoutes from "./views/campaigns/CampaignRoutes";
 
 import formsRoutes from "./views/forms/FormsRoutes";
 import mapRoutes from "./views/map/MapRoutes";
@@ -34,6 +35,7 @@ const routes = [
   ...clientRoutes,
   ...productRoutes,
   ...notificationRoutes,
+  ...campaignRoutes,
   ...formsRoutes,
   ...mapRoutes,
   ...redirectRoute,

@@ -1,8 +1,5 @@
 import React, { Component, Fragment } from "react";
-import {
-  Grid,
-  Card
-} from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
 
 import DoughnutChart from "../charts/echarts/Doughnut";
 
@@ -28,8 +25,8 @@ class Dashboard1 extends Component {
               series: [
                 {
                   data: [34, 45, 31, 45, 31, 43, 26, 43, 31, 45, 33, 40],
-                  type: "line"
-                }
+                  type: "line",
+                },
               ],
               xAxis: {
                 data: [
@@ -44,9 +41,9 @@ class Dashboard1 extends Component {
                   "Sep",
                   "Oct",
                   "Nov",
-                  "Dec"
-                ]
-              }
+                  "Dec",
+                ],
+              },
             }}
           ></ModifiedAreaChart>
         </div>
@@ -54,32 +51,29 @@ class Dashboard1 extends Component {
         <div className="analytics m-sm-30 mt--72">
           <Grid container spacing={3}>
             <Grid item lg={8} md={8} sm={12} xs={12}>
-
-              <StatCards theme={theme}/>
+              <StatCards theme={theme} />
 
               {/* Top Selling Products */}
-              <TableCard/>
+              <TableCard />
 
-              <StatCards2/>
-
+              <StatCards2 />
             </Grid>
 
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <Card className="px-24 py-16 mb-16">
-                <div className="card-title">Traffic Sources</div>
+                <div className="card-title">Campaigns</div>
                 <div className="card-subtitle">Last 30 days</div>
                 <DoughnutChart
                   height="300px"
                   color={[
                     theme.palette.primary.dark,
                     theme.palette.primary.main,
-                    theme.palette.primary.light
+                    theme.palette.primary.light,
                   ]}
                 />
               </Card>
 
-              <Campaigns/>
-
+              <Campaigns />
             </Grid>
           </Grid>
         </div>
