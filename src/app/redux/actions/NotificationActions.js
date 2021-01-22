@@ -6,8 +6,18 @@ export const GET_NOTIFICATION = "GET_NOTIFICATION";
 export const CREATE_NOTIFICATION = "CREATE_NOTIFICATION";
 export const DELETE_NOTIFICATION = "DELETE_NOTIFICATION";
 export const DELETE_ALL_NOTIFICATION = "DELETE_ALL_NOTIFICATION";
+export const SET_NOTIFICATIONS_DATA = "SET_NOTIFICATIONS_DATA";
 
 const notificationUrl = `${BACKEND_URL}/dynamicapi/records/notifications`;
+
+export function setNotificationsData(notifications) {
+  return (dispatch) => {
+    dispatch({
+      type: SET_NOTIFICATIONS_DATA,
+      payload: notifications,
+    });
+  };
+}
 
 export const getNotification = () => (dispatch) => {
   axios.get(notificationUrl).then((res) => {

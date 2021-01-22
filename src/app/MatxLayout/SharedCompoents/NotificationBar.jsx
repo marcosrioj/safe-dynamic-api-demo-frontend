@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Icon,
   Badge,
@@ -31,6 +31,12 @@ function NotificationBar(props) {
 
   const [panelOpen, setPanelOpen] = React.useState(false);
 
+  useEffect(() => {
+    if (props.user) {
+      getNotification();
+    }
+  }, [getNotification, props.user]);
+
   function handleDrawerToggle() {
     if (!panelOpen) {
       getNotification();
@@ -50,7 +56,7 @@ function NotificationBar(props) {
               : parentThemePalette.text.primary,
         }}
       >
-        <Badge color="secondary" badgeContent={5}>
+        <Badge color="secondary" badgeContent={notificationList.length}>
           <Icon>notifications</Icon>
         </Badge>
       </IconButton>
@@ -138,6 +144,7 @@ const mapStateToProps = (state) => ({
   deleteAllNotification: PropTypes.func.isRequired,
   notification: state.notification,
   settings: state.layout.settings,
+  user: state.user,
 });
 
 export default withStyles(

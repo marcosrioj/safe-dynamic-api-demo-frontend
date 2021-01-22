@@ -16,15 +16,25 @@ import DataGrid, {
 import { Item } from "devextreme-react/form";
 import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
+import { PropTypes } from "prop-types";
+import { connect } from "react-redux";
 
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
+import { setNotificationsData } from "app/redux/actions/NotificationActions";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/notifications`;
 const fiedlsToGet = ["id", "type", "title", "message", "timestamp"];
 const store = createDevExpressStore(urlBase, fiedlsToGet);
-
 class AppNotification extends React.Component {
+  constructor(props) {
+    super(props);
+
+    store.on("loaded", (e) => {
+      this.props.setNotificationsData(e.data);
+    });
+  }
+
   render() {
     return (
       <div className="m-sm-30">
@@ -118,4 +128,10 @@ class AppNotification extends React.Component {
   }
 }
 
-export default AppNotification;
+const mapStateToProps = (state) => ({
+  setNotificationsData: PropTypes.func.isRequired,
+});
+
+export default connect(mapStateToProps, { setNotificationsData })(
+  AppNotification
+);
