@@ -20,7 +20,7 @@ const App = () => {
         <MatxTheme>
           <Auth>
             <Router history={history}>
-              <AuthGuard testtttt={true}>
+              <AuthGuard>
                 <MatxLayout />
               </AuthGuard>
             </Router>

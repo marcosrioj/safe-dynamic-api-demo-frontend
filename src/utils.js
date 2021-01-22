@@ -1,6 +1,8 @@
 import moment from "moment";
 import axios from "axios";
 import CustomStore from "devextreme/data/custom_store";
+import { Store } from "./app/redux/Store";
+import { logoutUser } from "app/redux/actions/UserActions";
 
 export function debounce(func, wait, immediate) {
   var timeout;
@@ -304,4 +306,17 @@ export function createDevExpressStore(apiBase, fieldsToGet, urlViewBase) {
   });
 
   return store;
+}
+
+export function axiosInterceptor() {
+  axios.interceptors.response.use(
+    function (response) {
+      return response;
+    },
+    function (error) {
+      if (401 === error.response.status) {
+        Store.dispatch(logoutUser());
+      }
+    }
+  );
 }

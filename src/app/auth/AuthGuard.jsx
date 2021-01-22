@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import AppContext from "app/appContext";
+import { axiosInterceptor } from "utils";
 
 class AuthGuard extends Component {
   constructor(props, context) {
@@ -10,8 +11,10 @@ class AuthGuard extends Component {
 
     this.state = {
       authenticated: false,
-      routes
+      routes,
     };
+
+    axiosInterceptor();
   }
 
   componentDidMount() {
@@ -30,17 +33,17 @@ class AuthGuard extends Component {
     return nextState.authenticated !== this.state.authenticated;
   }
 
-  static getDerivedStateFromProps(props, state) {    
+  static getDerivedStateFromProps(props, state) {
     const { location, user } = props;
     const { pathname } = location;
-    const matched = state.routes.find(r => r.path === pathname);
+    const matched = state.routes.find((r) => r.path === pathname);
     const authenticated =
       matched && matched.auth && matched.auth.length
         ? matched.auth.includes(user.role)
         : true;
 
     return {
-      authenticated
+      authenticated,
     };
   }
 
@@ -50,7 +53,7 @@ class AuthGuard extends Component {
 
     history.push({
       pathname: "/session/signin",
-      state: { redirectUrl: pathname }
+      state: { redirectUrl: pathname },
     });
   }
 
@@ -63,8 +66,8 @@ class AuthGuard extends Component {
 
 AuthGuard.contextType = AppContext;
 
-const mapStateToProps = state => ({
-  user: state.user
+const mapStateToProps = (state) => ({
+  user: state.user,
 });
 
 export default withRouter(connect(mapStateToProps)(AuthGuard));
