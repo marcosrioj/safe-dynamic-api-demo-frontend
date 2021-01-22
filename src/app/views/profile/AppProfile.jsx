@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import moment from "moment";
 import "devextreme/data/odata/store";
 import "devextreme/data/odata/store";
@@ -24,9 +23,8 @@ import {
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 
-import { BACKEND_URL } from "appSettings";
 import { getUser, setUserData } from "app/redux/actions/UserActions";
-import localStorageService from "../../services/localStorageService";
+import profileService from "../../services/profileService";
 
 class AppProfile extends React.Component {
   constructor(props) {
@@ -47,32 +45,9 @@ class AppProfile extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`${BACKEND_URL}/dynamicapi/records/clients`).then((res) => {
-      if (res.data.records) {
-        if (res.data.records.length === 0) {
-          this.props.getUser();
-
-          this.setState({
-            name: this.props.user.name,
-            email: this.props.user.email,
-            user_id: this.props.user.user_id,
-          });
-        } else {
-          const user = res.data.records[0];
-          let data = {};
-          for (const i in user) {
-            const prop = user[i];
-            if (prop) {
-              data[i] = user[i];
-            }
-          }
-
-          this.setState({ ...data });
-        }
-      } else {
-        // eslint-disable-next-line no-throw-literal
-        throw "Data Loading Error";
-      }
+    this.props.getUser();
+    profileService.getUserProfile(this.props.user).then((userProfile) => {
+      this.setState({ ...userProfile });
     });
   }
 
@@ -84,31 +59,18 @@ class AppProfile extends React.Component {
         data[i] = this.state[i];
       }
     }
+    data.token = this.props.user.token;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
 
     if (this.state.id) {
-      axios
-        .put(`${BACKEND_URL}/dynamicapi/records/clients/${this.state.id}`, data)
-        .then((res) => {
-          axios
-            .get(`${BACKEND_URL}/dynamicapi/records/clients/${this.state.id}`)
-            .then((res2) => {
-              this.props.setUserData(res2.data);
-              localStorageService.setItem("auth_user", res2.data);
-            });
-        });
+      profileService.updateProfile(this.state.id, data).then((user) => {
+        this.props.setUserData(user);
+      });
     } else {
-      axios
-        .post(`${BACKEND_URL}/dynamicapi/records/clients`, data)
-        .then((res) => {
-          axios
-            .get(`${BACKEND_URL}/dynamicapi/records/clients/${res.data}`)
-            .then((res2) => {
-              this.props.setUserData(res2.data);
-              localStorageService.setItem("auth_user", res2.data);
-            });
-        });
+      profileService.createProfile(data).then((user) => {
+        this.props.setUserData(user);
+      });
     }
   };
 

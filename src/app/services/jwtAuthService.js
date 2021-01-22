@@ -52,7 +52,9 @@ class JwtAuthService {
       }, 100);
     }).then((data) => {
       // Token is valid
-      this.setSession(data.token);
+      if (data && data.token) {
+        this.setSession(data.token);
+      }
       this.setUser(data);
       return data;
     });
