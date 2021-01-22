@@ -12,6 +12,8 @@ import notificationRoutes from "./views/notifications/NotificationRoutes";
 import campaignRoutes from "./views/campaigns/CampaignRoutes";
 import orderRoutes from "./views/orders/OrderRoutes";
 
+import profileRoutes from "./views/profile/ProfileRoutes";
+
 import formsRoutes from "./views/forms/FormsRoutes";
 import mapRoutes from "./views/map/MapRoutes";
 
@@ -38,6 +40,7 @@ const routes = [
   ...notificationRoutes,
   ...campaignRoutes,
   ...orderRoutes,
+  ...profileRoutes,
   ...formsRoutes,
   ...mapRoutes,
   ...redirectRoute,

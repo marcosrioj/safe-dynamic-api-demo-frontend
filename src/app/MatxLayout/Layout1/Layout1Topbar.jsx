@@ -102,7 +102,7 @@ class Layout1Topbar extends Component {
                   <MenuItem style={{ minWidth: 185 }}>
                     <Link
                       className="flex flex-middle"
-                      to="/page-layouts/user-profile"
+                      to="/profile"
                     >
                       <Icon> person </Icon>
                       <span className="pl-16"> Profile </span>

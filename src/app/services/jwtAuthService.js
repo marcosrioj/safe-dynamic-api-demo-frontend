@@ -21,9 +21,9 @@ class JwtAuthService {
                 resolve({
                   userId: res2.data.id,
                   role: res2.data.type,
-                  displayName: res2.data.name,
+                  name: res2.data.name,
                   email: res2.data.email,
-                  photoURL: res2.data.avatar,
+                  photo: res2.data.avatar,
                   token: res.data.access_token,
                 });
               } else {

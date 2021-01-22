@@ -8,7 +8,6 @@ import {
   IconButton,
   Drawer,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/styles";
 import { getTimeDifference } from "utils.js";
 import { PropTypes } from "prop-types";

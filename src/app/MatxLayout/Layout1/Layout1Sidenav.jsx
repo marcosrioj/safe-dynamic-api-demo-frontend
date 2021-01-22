@@ -9,6 +9,7 @@ import {
   IconButton,
   MuiThemeProvider,
 } from "@material-ui/core";
+import history from "history.js";
 
 import { connect } from "react-redux";
 import {
@@ -85,6 +86,12 @@ class Layout1Sidenav extends Component {
     this.props.logoutUser();
   };
 
+  handleGoProfile = () => {
+    history.push({
+      pathname: "/profile",
+    });
+  };
+
   renderLogoSwitch = () => (
     // Open Brand component file to replace logo and text
     <Brand>
@@ -97,17 +104,16 @@ class Layout1Sidenav extends Component {
     </Brand>
   );
 
-  renderUser = () => {
-    let { user } = this.props;
+  renderUser = (user) => {
     return (
       <div className="sidenav__user">
         <div className="username-photo">
-          <img src={user.photoURL} alt="user" />
+          <img src={user.photo} alt="user" />
         </div>
         <div className="ml-8">
           <span className="username">
             {/* <Icon>lock</Icon> */}
-            {user.displayName}
+            {user.name}
           </span>
           <div className="user__menu">
             <MatxMenu>
@@ -118,17 +124,17 @@ class Layout1Sidenav extends Component {
             </MatxMenu>
 
             <Tooltip title="Profile">
-              <IconButtonWhite aria-label="Delete" className="" size="small">
-                <IconSmall>person</IconSmall>
-              </IconButtonWhite>
-            </Tooltip>
-            <Tooltip title="Sign out">
               <IconButtonWhite
                 aria-label="Delete"
                 className=""
                 size="small"
-                onClick={this.handleSignOut}
+                onClick={this.handleGoProfile}
               >
+                <IconSmall>person</IconSmall>
+              </IconButtonWhite>
+            </Tooltip>
+            <Tooltip title="Sign out">
+              <IconButtonWhite aria-label="Delete" className="" size="small">
                 <IconSmall>exit_to_app</IconSmall>
               </IconButtonWhite>
             </Tooltip>
@@ -139,7 +145,7 @@ class Layout1Sidenav extends Component {
   };
 
   render() {
-    let { theme, settings } = this.props;
+    let { theme, settings, user } = this.props;
     const sidenavTheme =
       settings.themes[settings.layout1Settings.leftSidebar.theme] || theme;
     return (
@@ -151,7 +157,7 @@ class Layout1Sidenav extends Component {
             {
               <Fragment>
                 {this.renderLogoSwitch()}
-                <Sidenav>{this.renderUser()}</Sidenav>
+                <Sidenav>{this.renderUser(user)}</Sidenav>
               </Fragment>
             }
           </div>

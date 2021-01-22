@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import "devextreme/data/odata/store";
 import "devextreme/data/odata/store";
 import DataGrid, {
@@ -20,6 +21,7 @@ import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
+const urlViewBase = `${BACKEND_URL}/dynamicapi/records/clients_view`;
 const fiedlsToGet = [
   "id",
   "name",
@@ -29,8 +31,9 @@ const fiedlsToGet = [
   "is_active",
   "genre",
   "biography",
+  "birthday",
 ];
-const store = createDevExpressStore(urlBase, fiedlsToGet);
+const store = createDevExpressStore(urlBase, fiedlsToGet, urlViewBase);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
@@ -58,6 +61,11 @@ class AppClient extends React.Component {
               allowUpdating={true}
               allowAdding={true}
               allowDeleting={true}
+              onRowInserting={(e) => {
+                e.data.birthday = moment(e.data.birthday, "DD/MM/YYYY").format(
+                  "YYYY-MM-DD"
+                );
+              }}
             >
               <Popup title="Client" showTitle={true} width={700} height={525}>
                 <Position my="top" at="top" of={window} />
@@ -73,12 +81,22 @@ class AppClient extends React.Component {
                   />
                   <Item dataField="email" dataType="string" />
                   <Item dataField="mobile_number" dataType="string" />
+                  <Item dataField="birthday" dataType="date" />
                   <Item
                     dataField="genre"
                     editorType="dxSelectBox"
                     editorOptions={{
                       items: ["male", "female", "others"],
                       value: "",
+                    }}
+                  />
+                  <Item
+                    dataField="is_active"
+                    dataType="string"
+                    editorType="dxSelectBox"
+                    editorOptions={{
+                      items: [true, false],
+                      value: true,
                     }}
                   />
                 </Item>
@@ -89,15 +107,6 @@ class AppClient extends React.Component {
                   colCount={2}
                   colSpan={2}
                 >
-                  <Item
-                    dataField="is_active"
-                    dataType="string"
-                    editorType="dxSelectBox"
-                    editorOptions={{
-                      items: [true, false],
-                      value: true,
-                    }}
-                  />
                   <Item dataField="biography" dataType="string" colSpan={2} />
                 </Item>
               </Form>
@@ -118,6 +127,7 @@ class AppClient extends React.Component {
 
             <Column dataField="is_active" dataType="string" visible={false} />
             <Column dataField="biography" dataType="string" visible={false} />
+            <Column dataField="birthday" dataType="date" visible={false} />
 
             <Paging defaultPageSize={5} />
             <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} />
