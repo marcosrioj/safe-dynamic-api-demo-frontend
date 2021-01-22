@@ -6,15 +6,15 @@ export const GET_NOTIFICATION = "GET_NOTIFICATION";
 export const CREATE_NOTIFICATION = "CREATE_NOTIFICATION";
 export const DELETE_NOTIFICATION = "DELETE_NOTIFICATION";
 export const DELETE_ALL_NOTIFICATION = "DELETE_ALL_NOTIFICATION";
-export const SET_NOTIFICATIONS_DATA = "SET_NOTIFICATIONS_DATA";
+export const SET_NOTIFICATION_TOTAL_COUNT = "SET_NOTIFICATION_TOTAL_COUNT";
 
 const notificationUrl = `${BACKEND_URL}/dynamicapi/records/notifications`;
 
-export function setNotificationsData(notifications) {
+export function setNotificationTotalCount(totalCount) {
   return (dispatch) => {
     dispatch({
-      type: SET_NOTIFICATIONS_DATA,
-      payload: notifications,
+      type: SET_NOTIFICATION_TOTAL_COUNT,
+      payload: { totalCount: totalCount },
     });
   };
 }
@@ -23,7 +23,7 @@ export const getNotification = () => (dispatch) => {
   axios.get(notificationUrl).then((res) => {
     dispatch({
       type: GET_NOTIFICATION,
-      payload: res.data.records,
+      payload: { data: res.data.records },
     });
   });
 };
@@ -32,7 +32,7 @@ export const deleteNotification = (id) => (dispatch) => {
   axios.delete(`${notificationUrl}/${id}`).then((res) => {
     dispatch({
       type: DELETE_NOTIFICATION,
-      payload: res.data,
+      payload: { data: res.data },
     });
   });
 };
@@ -49,7 +49,7 @@ export const deleteAllNotification = () => (dispatch) => {
       axios.delete(idsToDeleteUrl).then((res) => {
         dispatch({
           type: DELETE_ALL_NOTIFICATION,
-          payload: [],
+          payload: { totalCount: 0, data: [] },
         });
       });
     }
@@ -60,7 +60,7 @@ export const createNotification = (notification) => (dispatch) => {
   axios.post(notificationUrl, notification).then((res) => {
     dispatch({
       type: CREATE_NOTIFICATION,
-      payload: res.data,
+      payload: { data: res.data },
     });
   });
 };

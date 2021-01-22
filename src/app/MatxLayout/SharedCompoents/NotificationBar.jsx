@@ -16,14 +16,16 @@ import {
   getNotification,
   deleteAllNotification,
   deleteNotification,
+  setNotificationTotalCount,
 } from "../../redux/actions/NotificationActions";
+import notificationService from "../../services/notificationService";
 
 function NotificationBar(props) {
   const {
     container,
     theme,
     settings,
-    notification: notificationList = [],
+    notification: notificationState = { data: [] },
     getNotification,
     deleteAllNotification,
     deleteNotification,
@@ -33,9 +35,12 @@ function NotificationBar(props) {
 
   useEffect(() => {
     if (props.user) {
-      getNotification();
+      notificationService.getNotificationsCount().then((totalCount) => {
+        props.setNotificationTotalCount(totalCount);
+      });
     }
-  }, [getNotification, props.user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleDrawerToggle() {
     if (!panelOpen) {
@@ -56,7 +61,7 @@ function NotificationBar(props) {
               : parentThemePalette.text.primary,
         }}
       >
-        <Badge color="secondary" badgeContent={notificationList.length}>
+        <Badge color="secondary" badgeContent={props.notification.totalCount}>
           <Icon>notifications</Icon>
         </Badge>
       </IconButton>
@@ -78,7 +83,7 @@ function NotificationBar(props) {
             <h5 className="ml-8 my-0 font-weight-500">Notifications</h5>
           </div>
 
-          {notificationList.map((notification, i) => (
+          {notificationState.data.map((notification, i) => (
             <div key={i} className="notification__card position-relative">
               <IconButton
                 size="small"
@@ -135,13 +140,14 @@ function NotificationBar(props) {
 
 NotificationBar.propTypes = {
   settings: PropTypes.object.isRequired,
-  notification: PropTypes.array.isRequired,
+  notification: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   getNotification: PropTypes.func.isRequired,
   deleteNotification: PropTypes.func.isRequired,
   deleteAllNotification: PropTypes.func.isRequired,
+  setNotificationTotalCount: PropTypes.func.isRequired,
   notification: state.notification,
   settings: state.layout.settings,
   user: state.user,
@@ -155,5 +161,6 @@ export default withStyles(
     getNotification,
     deleteNotification,
     deleteAllNotification,
+    setNotificationTotalCount,
   })(NotificationBar)
 );

@@ -21,7 +21,7 @@ import { connect } from "react-redux";
 
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
-import { setNotificationsData } from "app/redux/actions/NotificationActions";
+import { setNotificationTotalCount } from "app/redux/actions/NotificationActions";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/notifications`;
 const fiedlsToGet = ["id", "type", "title", "message", "timestamp"];
@@ -31,7 +31,7 @@ class AppNotification extends React.Component {
     super(props);
 
     store.on("loaded", (e) => {
-      this.props.setNotificationsData(e.data);
+      this.props.setNotificationTotalCount(e.totalCount);
     });
   }
 
@@ -129,9 +129,9 @@ class AppNotification extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  setNotificationsData: PropTypes.func.isRequired,
+  setNotificationTotalCount: PropTypes.func.isRequired,
 });
 
-export default connect(mapStateToProps, { setNotificationsData })(
+export default connect(mapStateToProps, { setNotificationTotalCount })(
   AppNotification
 );
