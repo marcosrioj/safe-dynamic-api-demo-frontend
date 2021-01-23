@@ -314,8 +314,10 @@ export function axiosInterceptor() {
       return response;
     },
     function (error) {
-      if (401 === error.response.status) {
-        Store.dispatch(logoutUser());
+      if (error && error.response) {
+        if (401 === error.response.status) {
+          Store.dispatch(logoutUser());
+        }
       }
     }
   );
