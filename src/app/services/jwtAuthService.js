@@ -12,11 +12,7 @@ class JwtAuthService {
   loginWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
       axios
-        .post(
-          `${BACKEND_URL}/auth/login`,
-          { email, password },
-          { withCredentials: true }
-        )
+        .post(`${BACKEND_URL}/auth/login`, { email, password })
         .then((res) => {
           if (res.data.access_token) {
             this.setSession(res.data.access_token);
@@ -96,7 +92,6 @@ class JwtAuthService {
     if (token) {
       localStorage.setItem("jwt_token", token);
       axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-      axios.defaults.headers.common["Content-Type"] = "application/json";
     } else {
       localStorage.removeItem("jwt_token");
       delete axios.defaults.headers.common["Authorization"];
