@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { BACKEND_URL } from "appSettings";
 import localStorageService from "./localStorageService";
+import { createAvatarUrl } from "utils";
 
 class ProfileService {
   updateProfile = (id, data) => {
@@ -14,6 +15,7 @@ class ProfileService {
             .then((res2) => {
               res2.data.token = data.token;
               res2.data.type = data.type;
+              res2.data.photoURL = createAvatarUrl(res2.data.photo);
               localStorageService.setItem("auth_user", res2.data);
               resolve(res2.data);
             });
@@ -31,6 +33,7 @@ class ProfileService {
             .then((res2) => {
               res2.data.token = data.token;
               res2.data.type = data.type;
+              res2.data.photoURL = createAvatarUrl(res2.data.photo);
               localStorageService.setItem("auth_user", res2.data);
               resolve(res2.data);
             });

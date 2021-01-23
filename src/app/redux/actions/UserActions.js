@@ -1,6 +1,7 @@
 import history from "history.js";
 import jwtAuthService from "../../services/jwtAuthService";
 import localStorageService from "../../services/localStorageService";
+import { createAvatarUrl } from "utils";
 
 export const SET_USER_DATA = "USER_SET_DATA";
 export const GET_USER_DATA = "USER_GET_DATA";
@@ -19,6 +20,8 @@ export function setUserData(user) {
 export function getUser() {
   return (dispatch) => {
     const user = localStorageService.getItem("auth_user");
+    user.photoURL = createAvatarUrl(user.photo);
+
     dispatch({
       type: GET_USER_DATA,
       payload: user,

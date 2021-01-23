@@ -6,7 +6,6 @@ import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
-
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import {
   Button,
@@ -22,7 +21,9 @@ import {
 } from "@material-ui/pickers";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+import Avatar from "react-avatar-edit";
 
+import { fileToBase64, createAvatarUrl } from "../../../utils";
 import { getUser, setUserData } from "app/redux/actions/UserActions";
 import profileService from "../../services/profileService";
 
@@ -38,16 +39,23 @@ class AppProfile extends React.Component {
       genre: "",
       biography: "",
       user_id: "",
+      photo: "",
+      photoURL: "",
+      photoURLLoaded: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
+    this.onFileLoad = this.onFileLoad.bind(this);
   }
 
   componentDidMount() {
     this.props.getUser();
     profileService.getUserProfile(this.props.user).then((userProfile) => {
+      userProfile.photoURL = createAvatarUrl(userProfile.photo);
       this.setState({ ...userProfile });
+      this.setState({ photoURLLoaded: true });
     });
   }
 
@@ -61,6 +69,8 @@ class AppProfile extends React.Component {
     }
     data.token = this.props.user.token;
     data.type = this.props.user.type;
+    delete data.photoURL;
+    delete data.photoURLLoaded;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
 
@@ -84,6 +94,24 @@ class AppProfile extends React.Component {
     this.setState({ birthday });
   };
 
+  onBeforeFileLoad(elem) {
+    if (elem.target.files[0].size > 716800) {
+      alert("File is too big!");
+      elem.target.value = "";
+    }
+  }
+
+  onFileLoad(file) {
+    fileToBase64(file).then((fileBase64) => {
+      const base64 = fileBase64.split(",")[1];
+      this.setState({ photo: base64 });
+    });
+  }
+
+  onFileClose() {
+    this.setState({ photo: "" });
+  }
+
   render() {
     let { name, mobile_number, genre, birthday, email, biography } = this.state;
     return (
@@ -101,22 +129,48 @@ class AppProfile extends React.Component {
           >
             <Grid container spacing={6}>
               <Grid item lg={6} md={6} sm={12} xs={12}>
-                <TextValidator
-                  className="mb-16 w-100"
-                  label="Name"
-                  onChange={this.handleChange}
-                  type="text"
-                  name="name"
-                  value={name}
-                  validators={["required"]}
-                  errorMessages={["this field is required"]}
-                />
-                <TextValidator
-                  className="mb-16 w-100"
-                  label="Email"
-                  type="email"
-                  value={email}
-                />
+                <div style={{ display: "flex" }}>
+                  <div style={{ marginRight: 25, marginBottom: 25 }}>
+                    {this.state.photoURLLoaded && (
+                      <Avatar
+                        width={120}
+                        height={120}
+                        shadingOpacity={0}
+                        cropColor="transparent"
+                        backgroundColor="transparent"
+                        closeIconColor="#053644"
+                        shadingColor="transparent"
+                        onBeforeFileLoad={this.onBeforeFileLoad}
+                        onFileLoad={this.onFileLoad}
+                        onClose={this.OnFileClose}
+                        src={this.state.photoURL}
+                        label="Avatar"
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div>
+                      <TextValidator
+                        label="Name"
+                        onChange={this.handleChange}
+                        type="text"
+                        style={{ width: "100%" }}
+                        name="name"
+                        value={name}
+                        validators={["required"]}
+                        errorMessages={["this field is required"]}
+                      />
+                    </div>
+                    <div style={{ marginTop: 20 }}>
+                      <TextValidator
+                        label="Email"
+                        type="email"
+                        value={email}
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+                </div>
 
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardDatePicker

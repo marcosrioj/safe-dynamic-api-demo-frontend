@@ -83,7 +83,10 @@ class Layout1Topbar extends Component {
 
                 <div className="hide-on-mobile">
                   <Link className="flex flex-middle" to="/">
-                    <Icon style={{ color: "#fff" }} fontSize={'large'}> home </Icon>
+                    <Icon style={{ color: "#fff" }} fontSize={"large"}>
+                      {" "}
+                      home{" "}
+                    </Icon>
                   </Link>
                 </div>
               </div>
@@ -94,16 +97,13 @@ class Layout1Topbar extends Component {
                   menuButton={
                     <img
                       className="mx-8 text-middle circular-image-small cursor-pointer"
-                      src="/assets/images/face-6.jpg"
+                      src={this.props.user.photoURL}
                       alt="user"
                     />
                   }
                 >
                   <MenuItem style={{ minWidth: 185 }}>
-                    <Link
-                      className="flex flex-middle"
-                      to="/profile"
-                    >
+                    <Link className="flex flex-middle" to="/profile">
                       <Icon> person </Icon>
                       <span className="pl-16"> Profile </span>
                     </Link>
@@ -136,6 +136,7 @@ const mapStateToProps = (state) => ({
   setLayoutSettings: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   settings: state.layout.settings,
+  user: state.user,
 });
 
 export default withStyles(styles, { withTheme: true })(

@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { BACKEND_URL } from "appSettings";
 import localStorageService from "./localStorageService";
+import { createAvatarUrl } from "utils";
 
 class JwtAuthService {
   // You need to send http request with email and passsword to your server in this method
@@ -18,14 +19,31 @@ class JwtAuthService {
 
             axios.post(`${BACKEND_URL}/auth/me`).then((res2) => {
               if (res2.data.id) {
-                resolve({
-                  user_id: res2.data.id,
-                  type: res2.data.type,
-                  name: res2.data.name,
-                  email: res2.data.email,
-                  photo: res2.data.avatar,
-                  token: res.data.access_token,
-                });
+                axios
+                  .get(`${BACKEND_URL}/dynamicapi/records/clients`)
+                  .then((res3) => {
+                    if (res3.data.records && res3.data.records.length > 0) {
+                      const client = res3.data.records[0];
+                      const photoURL = createAvatarUrl(client.photo);
+                      resolve({
+                        user_id: res2.data.id,
+                        type: res2.data.type,
+                        name: res2.data.name,
+                        email: res2.data.email,
+                        photo: client.photo,
+                        photoURL: photoURL,
+                        token: res.data.access_token,
+                      });
+                    } else {
+                      resolve({
+                        user_id: res2.data.id,
+                        type: res2.data.type,
+                        name: res2.data.name,
+                        email: res2.data.email,
+                        token: res.data.access_token,
+                      });
+                    }
+                  });
               } else {
                 reject(res2);
               }
@@ -48,6 +66,10 @@ class JwtAuthService {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const user = localStorageService.getItem("auth_user");
+        if (user) {
+          user.photoURL = createAvatarUrl(user.photo);
+        }
+
         resolve(user);
       }, 100);
     }).then((data) => {
