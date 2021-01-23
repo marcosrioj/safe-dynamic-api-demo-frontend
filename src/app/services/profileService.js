@@ -13,6 +13,7 @@ class ProfileService {
             .get(`${BACKEND_URL}/dynamicapi/records/clients/${id}`)
             .then((res2) => {
               res2.data.token = data.token;
+              res2.data.type = data.type;
               localStorageService.setItem("auth_user", res2.data);
               resolve(res2.data);
             });
@@ -29,6 +30,7 @@ class ProfileService {
             .get(`${BACKEND_URL}/dynamicapi/records/clients/${res.data}`)
             .then((res2) => {
               res2.data.token = data.token;
+              res2.data.type = data.type;
               localStorageService.setItem("auth_user", res2.data);
               resolve(res2.data);
             });

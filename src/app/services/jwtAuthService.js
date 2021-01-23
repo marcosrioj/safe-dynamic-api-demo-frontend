@@ -20,7 +20,7 @@ class JwtAuthService {
               if (res2.data.id) {
                 resolve({
                   user_id: res2.data.id,
-                  role: res2.data.type,
+                  type: res2.data.type,
                   name: res2.data.name,
                   email: res2.data.email,
                   photo: res2.data.avatar,

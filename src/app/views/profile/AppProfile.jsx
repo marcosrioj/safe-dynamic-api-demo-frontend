@@ -60,6 +60,7 @@ class AppProfile extends React.Component {
       }
     }
     data.token = this.props.user.token;
+    data.type = this.props.user.type;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
 

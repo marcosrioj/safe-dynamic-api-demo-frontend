@@ -39,7 +39,7 @@ class AuthGuard extends Component {
     const matched = state.routes.find((r) => r.path === pathname);
     const authenticated =
       matched && matched.auth && matched.auth.length
-        ? matched.auth.includes(user.role)
+        ? matched.auth.includes(user.type)
         : true;
 
     return {
