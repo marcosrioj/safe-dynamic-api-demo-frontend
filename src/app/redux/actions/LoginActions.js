@@ -52,7 +52,7 @@ export function firebaseLoginEmailPassword({ email, password }) {
         if (user) {
           dispatch(
             setUserData({
-              userId: "1",
+              user_id: "1",
               role: "ADMIN",
               name: "Watson Joyce",
               email: "watsonjoyce@gmail.com",

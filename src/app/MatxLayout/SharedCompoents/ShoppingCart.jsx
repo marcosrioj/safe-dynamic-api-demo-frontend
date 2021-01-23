@@ -32,7 +32,7 @@ function ShoppingCart(props) {
   const [panelOpen, setPanelOpen] = React.useState(false);
 
   if (!cartListLoaded) {
-    getCartList(user.userId);
+    getCartList(user.user_id);
     cartListLoaded = true;
   }
 
@@ -84,7 +84,7 @@ function ShoppingCart(props) {
                   size="small"
                   onClick={() =>
                     updateCartAmount(
-                      user.userId,
+                      user.user_id,
                       product.id,
                       product.amount + 1
                     )
@@ -97,7 +97,7 @@ function ShoppingCart(props) {
                   size="small"
                   onClick={() =>
                     updateCartAmount(
-                      user.userId,
+                      user.user_id,
                       product.id,
                       product.amount - 1
                     )
@@ -117,7 +117,7 @@ function ShoppingCart(props) {
               </div>
               <IconButton
                 size="small"
-                onClick={() => deleteProductFromCart(user.userId, product.id)}
+                onClick={() => deleteProductFromCart(user.user_id, product.id)}
               >
                 <Icon fontSize="small">clear</Icon>
               </IconButton>

@@ -19,7 +19,7 @@ class JwtAuthService {
             axios.post(`${BACKEND_URL}/auth/me`).then((res2) => {
               if (res2.data.id) {
                 resolve({
-                  userId: res2.data.id,
+                  user_id: res2.data.id,
                   role: res2.data.type,
                   name: res2.data.name,
                   email: res2.data.email,
