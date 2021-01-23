@@ -20,16 +20,19 @@ const Footer = ({ theme, settings }) => {
       </Helmet>
       <div className="footer flex flex-middle">
         <div className="flex flex-middle container px-sm-30 w-100">
-          <a href="http://marcoslima.com/products">
+          <a
+            href="https://github.com/marcoslimacom/safe-dynamic-api-demo-frontend"
+            style={{ marginRight: 20 }}
+          >
+            <Button variant="contained">
+              SafeDynamicAPI App/Frontend Sample - Github
+            </Button>
+          </a>
+          <a href="https://safedynamicapi.com">
             <Button variant="contained" color="secondary">
               Buy SafeDynamicAPI
             </Button>
           </a>
-          <span className="m-auto"></span>
-          <p className="m-0">
-            This is an example Frontend/App project that uses the SafeDynamicAPI
-            product
-          </p>
         </div>
       </div>
     </MuiThemeProvider>
