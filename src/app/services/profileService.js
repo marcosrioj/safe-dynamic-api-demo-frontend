@@ -13,7 +13,6 @@ class ProfileService {
           axios
             .get(`${BACKEND_URL}/dynamicapi/records/clients/${id}`)
             .then((res2) => {
-              res2.data.token = data.token;
               res2.data.type = data.type;
               res2.data.photoURL = createAvatarUrl(res2.data.photo);
               localStorageService.setItem("auth_user", res2.data);
@@ -31,7 +30,6 @@ class ProfileService {
           axios
             .get(`${BACKEND_URL}/dynamicapi/records/clients/${res.data}`)
             .then((res2) => {
-              res2.data.token = data.token;
               res2.data.type = data.type;
               res2.data.photoURL = createAvatarUrl(res2.data.photo);
               localStorageService.setItem("auth_user", res2.data);

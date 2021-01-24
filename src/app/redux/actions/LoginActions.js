@@ -1,5 +1,4 @@
 import jwtAuthService from "../../services/jwtAuthService";
-import FirebaseAuthService from "../../services/firebase/firebaseAuthService";
 import { setUserData } from "./UserActions";
 import history from "history.js";
 
@@ -42,46 +41,5 @@ export function resetPassword({ email }) {
       payload: email,
       type: RESET_PASSWORD
     });
-  };
-}
-
-export function firebaseLoginEmailPassword({ email, password }) {
-  return dispatch => {
-    FirebaseAuthService.signInWithEmailAndPassword(email, password)
-      .then(user => {
-        if (user) {
-          dispatch(
-            setUserData({
-              user_id: "1",
-              role: "ADMIN",
-              name: "Watson Joyce",
-              email: "watsonjoyce@gmail.com",
-              photo: "/assets/images/face-7.jpg",
-              age: 25,
-              token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-              ...user
-            })
-          );
-
-          history.push({
-            pathname: "/"
-          });
-
-          return dispatch({
-            type: LOGIN_SUCCESS
-          });
-        } else {
-          return dispatch({
-            type: LOGIN_ERROR,
-            payload: "Login Failed"
-          });
-        }
-      })
-      .catch(error => {
-        return dispatch({
-          type: LOGIN_ERROR,
-          payload: error
-        });
-      });
   };
 }

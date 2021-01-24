@@ -308,7 +308,12 @@ export function createDevExpressStore(apiBase, fieldsToGet, urlViewBase) {
   return store;
 }
 
-export function axiosInterceptor() {
+export function axiosConfig() {
+  const token = localStorage.getItem("jwt_token");
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  }
+
   axios.interceptors.response.use(
     function (response) {
       return response;

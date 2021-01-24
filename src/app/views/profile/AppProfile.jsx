@@ -67,11 +67,9 @@ class AppProfile extends React.Component {
         data[i] = this.state[i];
       }
     }
-    data.token = this.props.user.token;
     data.type = this.props.user.type;
     delete data.photoURL;
     delete data.photoURLLoaded;
-    delete data.token;
     delete data.type;
     delete data.email;
 

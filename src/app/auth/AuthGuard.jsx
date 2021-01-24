@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import AppContext from "app/appContext";
-import { axiosInterceptor } from "utils";
+import { axiosConfig } from "utils";
+import localStorageService from "app/services/localStorageService";
 
 class AuthGuard extends Component {
   constructor(props, context) {
@@ -14,7 +15,7 @@ class AuthGuard extends Component {
       routes,
     };
 
-    axiosInterceptor();
+    axiosConfig();
   }
 
   componentDidMount() {
@@ -34,7 +35,16 @@ class AuthGuard extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const { location, user } = props;
+    let { location, user } = props;
+
+    if (!user || (user && !user.user_id)) {
+      const userLs = localStorageService.getItem("auth_user");
+      const token = localStorage.getItem("jwt_token");
+      if (token && user) {
+        user = userLs;
+      }
+    }
+
     const { pathname } = location;
     const matched = state.routes.find((r) => r.path === pathname);
     const authenticated =

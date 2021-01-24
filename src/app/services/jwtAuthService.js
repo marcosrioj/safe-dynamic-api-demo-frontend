@@ -32,7 +32,6 @@ class JwtAuthService {
                         email: res2.data.email,
                         photo: client.photo,
                         photoURL: photoURL,
-                        token: res.data.access_token,
                       });
                     } else {
                       resolve({
@@ -40,7 +39,6 @@ class JwtAuthService {
                         type: res2.data.type,
                         name: res2.data.name,
                         email: res2.data.email,
-                        token: res.data.access_token,
                       });
                     }
                   });
@@ -64,21 +62,17 @@ class JwtAuthService {
   // This method is being used when user logged in & app is reloaded
   loginWithToken = () => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const user = localStorageService.getItem("auth_user");
-        if (user) {
-          user.photoURL = createAvatarUrl(user.photo);
-        }
+      const user = localStorageService.getItem("auth_user");
+      const token = localStorage.getItem("jwt_token");
 
-        resolve(user);
-      }, 100);
-    }).then((data) => {
-      // Token is valid
-      if (data && data.token) {
-        this.setSession(data.token);
+      if (user) {
+        user.photoURL = createAvatarUrl(user.photo);
       }
-      this.setUser(data);
-      return data;
+
+      this.setSession(token);
+      this.setUser(user);
+
+      resolve(user);
     });
   };
 
