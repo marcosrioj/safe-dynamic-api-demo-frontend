@@ -70,7 +70,6 @@ class AppProfile extends React.Component {
     data.type = this.props.user.type;
     delete data.photoURL;
     delete data.photoURLLoaded;
-    delete data.type;
     delete data.email;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");

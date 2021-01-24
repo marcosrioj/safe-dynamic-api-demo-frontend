@@ -134,7 +134,12 @@ class Layout1Sidenav extends Component {
               </IconButtonWhite>
             </Tooltip>
             <Tooltip title="Sign out">
-              <IconButtonWhite aria-label="Delete" className="" size="small">
+              <IconButtonWhite
+                aria-label="Delete"
+                className=""
+                size="small"
+                onClick={this.handleSignOut}
+              >
                 <IconSmall>exit_to_app</IconSmall>
               </IconButtonWhite>
             </Tooltip>
