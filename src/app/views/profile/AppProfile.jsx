@@ -135,6 +135,7 @@ class AppProfile extends React.Component {
                       <Avatar
                         width={120}
                         height={120}
+                        imageWidth={120}
                         shadingOpacity={0}
                         cropColor="transparent"
                         backgroundColor="transparent"
