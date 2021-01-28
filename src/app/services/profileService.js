@@ -8,10 +8,10 @@ class ProfileService {
   updateProfile = (id, data) => {
     return new Promise((resolve, reject) => {
       axios
-        .put(`${BACKEND_URL}/dynamicapi/records/clients/${id}`, data)
+        .put(`${BACKEND_URL}/dynamicapi/records/profile/${id}`, data)
         .then((res) => {
           axios
-            .get(`${BACKEND_URL}/dynamicapi/records/clients/${id}`)
+            .get(`${BACKEND_URL}/dynamicapi/records/profile/${id}`)
             .then((res2) => {
               res2.data.type = data.type;
               res2.data.photoURL = createAvatarUrl(res2.data.photo);
@@ -25,10 +25,10 @@ class ProfileService {
   createProfile = (data) => {
     return new Promise((resolve, reject) => {
       axios
-        .post(`${BACKEND_URL}/dynamicapi/records/clients`, data)
+        .post(`${BACKEND_URL}/dynamicapi/records/profile`, data)
         .then((res) => {
           axios
-            .get(`${BACKEND_URL}/dynamicapi/records/clients/${res.data}`)
+            .get(`${BACKEND_URL}/dynamicapi/records/profile/${res.data}`)
             .then((res2) => {
               res2.data.type = data.type;
               res2.data.photoURL = createAvatarUrl(res2.data.photo);
@@ -41,7 +41,7 @@ class ProfileService {
 
   getUserProfile = (user) => {
     return new Promise((resolve, reject) => {
-      axios.get(`${BACKEND_URL}/dynamicapi/records/clients`).then((res) => {
+      axios.get(`${BACKEND_URL}/dynamicapi/records/profile`).then((res) => {
         if (res.data.records) {
           if (res.data.records.length === 0) {
             resolve({

@@ -21,7 +21,6 @@ import { BACKEND_URL } from "appSettings";
 import { createDevExpressStore } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
-const urlViewBase = `${BACKEND_URL}/dynamicapi/records/clients_view`;
 const fiedlsToGet = [
   "id",
   "name",
@@ -33,7 +32,7 @@ const fiedlsToGet = [
   "biography",
   "birthday",
 ];
-const store = createDevExpressStore(urlBase, fiedlsToGet, urlViewBase);
+const store = createDevExpressStore(urlBase, fiedlsToGet);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
