@@ -62,10 +62,7 @@ class AppProfile extends React.Component {
   handleSubmit = (event) => {
     let data = {};
     for (const i in this.state) {
-      const prop = this.state[i];
-      if (prop) {
-        data[i] = this.state[i];
-      }
+      data[i] = this.state[i];
     }
     data.type = this.props.user.type;
     delete data.photoURL;
@@ -108,8 +105,9 @@ class AppProfile extends React.Component {
     });
   }
 
-  onFileClose() {
-    this.setState({ photo: "" });
+  onFileClose(self) {
+    self.setState({ photo: "" });
+    self.setState({ photoURL: "" });
   }
 
   render() {
@@ -143,7 +141,7 @@ class AppProfile extends React.Component {
                         shadingColor="transparent"
                         onBeforeFileLoad={this.onBeforeFileLoad}
                         onFileLoad={this.onFileLoad}
-                        onClose={this.OnFileClose}
+                        onClose={() => this.onFileClose(this)}
                         src={this.state.photoURL}
                         label="Avatar"
                       />

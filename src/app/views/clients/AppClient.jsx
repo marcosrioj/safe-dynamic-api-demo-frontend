@@ -31,7 +31,11 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressDataSource, createAvatarUrl } from "utils";
+import {
+  createDevExpressDataSource,
+  createAvatarUrl,
+  fileToBase64,
+} from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
 const fiedlsToGet = [
@@ -47,6 +51,10 @@ const fiedlsToGet = [
 ];
 const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 
+function photoRender(data) {
+  return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
+}
+
 class AppClient extends React.Component {
   constructor(props) {
     super(props);
@@ -59,11 +67,14 @@ class AppClient extends React.Component {
       mobile_number: "",
       genre: "",
       biography: "",
-      user_id: "",
       photo: "",
       photoURL: "",
+      photoURLLoaded: false,
       popupFormVisible: false,
     };
+
+    this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
+    this.onFileLoad = this.onFileLoad.bind(this);
   }
 
   cleanState() {
@@ -75,7 +86,6 @@ class AppClient extends React.Component {
       mobile_number: "",
       genre: "",
       biography: "",
-      user_id: "",
       photo: "",
       photoURL: "",
       popupFormVisible: false,
@@ -86,6 +96,7 @@ class AppClient extends React.Component {
     self.setState({ popupFormVisible: true });
     e.data.photoURL = createAvatarUrl(e.data.photo);
     self.setState({ ...e.data });
+    self.setState({ photoURLLoaded: true });
   }
 
   hidePopup(self) {
@@ -114,13 +125,11 @@ class AppClient extends React.Component {
   handleSubmit = (event) => {
     let data = {};
     for (const i in this.state) {
-      const prop = this.state[i];
-      if (prop) {
-        data[i] = this.state[i];
-      }
+      data[i] = this.state[i];
     }
 
     delete data.photoURL;
+    delete data.photoURLLoaded;
     delete data.popupFormVisible;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
@@ -128,7 +137,6 @@ class AppClient extends React.Component {
     if (this.state.id) {
       datasource._store.update(this.state.id, data).then(() => {
         this.cleanState();
-        debugger
         datasource.reload();
       });
     } else {
@@ -147,6 +155,25 @@ class AppClient extends React.Component {
   handleBirthdayChange = (birthday) => {
     this.setState({ birthday });
   };
+
+  onBeforeFileLoad(elem) {
+    if (elem.target.files[0].size > 716800) {
+      alert("File is too big!");
+      elem.target.value = "";
+    }
+  }
+
+  onFileLoad(file, self) {
+    fileToBase64(file).then((fileBase64) => {
+      const base64 = fileBase64.split(",")[1];
+      self.setState({ photo: base64 });
+    });
+  }
+
+  onFileClose(self) {
+    self.setState({ photo: "" });
+    self.setState({ photoURL: "" });
+  }
 
   render() {
     return (
@@ -170,21 +197,23 @@ class AppClient extends React.Component {
               <Grid item lg={6} md={6} sm={12} xs={12}>
                 <div style={{ display: "flex" }}>
                   <div style={{ marginRight: 25, marginBottom: 25 }}>
-                    <Avatar
-                      width={120}
-                      height={120}
-                      imageWidth={120}
-                      shadingOpacity={0}
-                      cropColor="transparent"
-                      backgroundColor="transparent"
-                      closeIconColor="#053644"
-                      shadingColor="transparent"
-                      onBeforeFileLoad={this.onBeforeFileLoad}
-                      onFileLoad={this.onFileLoad}
-                      onClose={this.OnFileClose}
-                      src={this.state.photoURL}
-                      label="Avatar"
-                    />
+                    {this.state.photoURLLoaded && (
+                      <Avatar
+                        width={120}
+                        height={120}
+                        imageWidth={120}
+                        shadingOpacity={0}
+                        cropColor="transparent"
+                        backgroundColor="transparent"
+                        closeIconColor="#053644"
+                        shadingColor="transparent"
+                        onBeforeFileLoad={this.onBeforeFileLoad}
+                        onFileLoad={(f) => this.onFileLoad(f, this)}
+                        onClose={() => this.onFileClose(this)}
+                        src={this.state.photoURL}
+                        label="Avatar"
+                      />
+                    )}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div>
@@ -298,6 +327,13 @@ class AppClient extends React.Component {
             <FilterRow visible={true} applyFilter={true} />
 
             <Column dataField="id" dataType="number" width={75} />
+            <Column
+              dataField="photo"
+              width={100}
+              allowSorting={false}
+              allowFiltering={false}
+              cellRender={photoRender}
+            />
             <Column dataField="name" dataType="string" />
             <Column dataField="email" dataType="string" />
             <Column dataField="mobile_number" dataType="string" />
