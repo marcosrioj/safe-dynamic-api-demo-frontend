@@ -17,11 +17,11 @@ import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressStore } from "utils";
+import { createDevExpressDataSource } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
-const fiedlsToGet = ['id', 'name', 'photo', 'price', 'stock'];
-const store = createDevExpressStore(urlBase, fiedlsToGet);
+const fiedlsToGet = ["id", "name", "photo", "price", "stock"];
+const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 
 function photoRender(data) {
   return <img src={`data:image/jpg;base64,${data.value}`} alt="" />;
@@ -37,7 +37,7 @@ class AppProduct extends React.Component {
         <div className="py-12" />
         <SimpleCard>
           <DataGrid
-            dataSource={store}
+            dataSource={datasource}
             showBorders={true}
             remoteOperations={true}
           >

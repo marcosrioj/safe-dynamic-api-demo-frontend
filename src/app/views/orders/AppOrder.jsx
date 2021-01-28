@@ -17,7 +17,7 @@ import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressStore } from "utils";
+import { createDevExpressDataSource } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/orders`;
 const urlViewBase = `${BACKEND_URL}/dynamicapi/records/orders_view`;
@@ -29,7 +29,7 @@ const fiedlsToGet = [
   "product_name",
   "status",
 ];
-const store = createDevExpressStore(urlBase, fiedlsToGet, urlViewBase);
+const datasource = createDevExpressDataSource(urlBase, fiedlsToGet, urlViewBase);
 
 class AppOrder extends React.Component {
   render() {
@@ -41,7 +41,7 @@ class AppOrder extends React.Component {
         <div className="py-12" />
         <SimpleCard>
           <DataGrid
-            dataSource={store}
+            dataSource={datasource}
             showBorders={true}
             remoteOperations={true}
           >

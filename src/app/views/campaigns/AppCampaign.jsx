@@ -18,11 +18,11 @@ import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressStore } from "utils";
+import { createDevExpressDataSource } from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/campaigns`;
 const fiedlsToGet = ["id", "name", "budget", "date"];
-const store = createDevExpressStore(urlBase, fiedlsToGet);
+const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 
 class AppCampaign extends React.Component {
   render() {
@@ -34,14 +34,13 @@ class AppCampaign extends React.Component {
         <div className="py-12" />
         <SimpleCard>
           <DataGrid
-            dataSource={store}
+            dataSource={datasource}
             showBorders={true}
             remoteOperations={true}
             onRowInserting={(e) => {
-              e.data.date = moment(
-                new Date(e.data.date),
-                "DD/MM/YYYY"
-              ).format("YYYY-MM-DD");
+              e.data.date = moment(new Date(e.data.date), "DD/MM/YYYY").format(
+                "YYYY-MM-DD"
+              );
             }}
           >
             <Sorting mode="multiple" />

@@ -1,6 +1,7 @@
 import moment from "moment";
 import axios from "axios";
 import CustomStore from "devextreme/data/custom_store";
+import DataSource from "devextreme/data/data_source";
 import { Store } from "./app/redux/Store";
 import { logoutUser } from "app/redux/actions/UserActions";
 
@@ -229,83 +230,85 @@ function getAllFilters(filtersParam) {
   return filters;
 }
 
-export function createDevExpressStore(apiBase, fieldsToGet, urlViewBase) {
-  const store = new CustomStore({
-    key: "id",
-    load: function (loadOptions) {
-      let params = "?";
+export function createDevExpressDataSource(apiBase, fieldsToGet, urlViewBase) {
+  const datasource = new DataSource({
+    store: new CustomStore({
+      key: "id",
+      load: function (loadOptions) {
+        let params = "?";
 
-      //Page
-      const page = loadOptions.skip / loadOptions.take + 1;
-      if (isNotEmpty(page)) {
-        params += `page=${page},${loadOptions.take}&`;
-      } else {
-        params += `page=1,${loadOptions.take}&`;
-      }
-
-      //Sort
-      if (loadOptions.sort) {
-        for (const i in loadOptions.sort) {
-          const item = loadOptions.sort[i];
-          const way = item.desc ? "desc" : "asc";
-          params += `order=${item.selector},${way}&`;
-        }
-      }
-
-      //Filter
-      if (loadOptions.filter) {
-        const allFilters = getAllFilters(loadOptions.filter);
-        params += `${allFilters}&`;
-      }
-
-      //Fields
-      if (isNotEmpty(fieldsToGet) && fieldsToGet.length > 0) {
-        params += `include=${fieldsToGet.join(",")}&`;
-      }
-
-      const apiViewBase = urlViewBase ? urlViewBase : apiBase;
-      return axios.get(`${apiViewBase}${params}`).then((res) => {
-        if (res.data.records) {
-          return {
-            data: res.data.records,
-            totalCount: res.data.results ? res.data.results : 0,
-          };
+        //Page
+        const page = loadOptions.skip / loadOptions.take + 1;
+        if (isNotEmpty(page)) {
+          params += `page=${page},${loadOptions.take}&`;
         } else {
-          // eslint-disable-next-line no-throw-literal
-          throw "Data Loading Error";
+          params += `page=1,${loadOptions.take}&`;
         }
-      });
-    },
-    update: function (id, data) {
-      return axios.put(`${apiBase}/${id}`, data).then((res) => {
-        if (res.data) {
-        } else {
-          // eslint-disable-next-line no-throw-literal
-          throw "Data Loading Error";
+
+        //Sort
+        if (loadOptions.sort) {
+          for (const i in loadOptions.sort) {
+            const item = loadOptions.sort[i];
+            const way = item.desc ? "desc" : "asc";
+            params += `order=${item.selector},${way}&`;
+          }
         }
-      });
-    },
-    insert: function (data) {
-      return axios.post(`${apiBase}`, data).then((res) => {
-        if (res.data) {
-        } else {
-          // eslint-disable-next-line no-throw-literal
-          throw "Data Loading Error";
+
+        //Filter
+        if (loadOptions.filter) {
+          const allFilters = getAllFilters(loadOptions.filter);
+          params += `${allFilters}&`;
         }
-      });
-    },
-    remove: function (id) {
-      return axios.delete(`${apiBase}/${id}`).then((res) => {
-        if (res.data) {
-        } else {
-          // eslint-disable-next-line no-throw-literal
-          throw "Data Loading Error";
+
+        //Fields
+        if (isNotEmpty(fieldsToGet) && fieldsToGet.length > 0) {
+          params += `include=${fieldsToGet.join(",")}&`;
         }
-      });
-    },
+
+        const apiViewBase = urlViewBase ? urlViewBase : apiBase;
+        return axios.get(`${apiViewBase}${params}`).then((res) => {
+          if (res.data.records) {
+            return {
+              data: res.data.records,
+              totalCount: res.data.results ? res.data.results : 0,
+            };
+          } else {
+            // eslint-disable-next-line no-throw-literal
+            throw "Data Loading Error";
+          }
+        });
+      },
+      update: function (id, data) {
+        return axios.put(`${apiBase}/${id}`, data).then((res) => {
+          if (res.data) {
+          } else {
+            // eslint-disable-next-line no-throw-literal
+            throw "Data Loading Error";
+          }
+        });
+      },
+      insert: function (data) {
+        return axios.post(`${apiBase}`, data).then((res) => {
+          if (res.data) {
+          } else {
+            // eslint-disable-next-line no-throw-literal
+            throw "Data Loading Error";
+          }
+        });
+      },
+      remove: function (id) {
+        return axios.delete(`${apiBase}/${id}`).then((res) => {
+          if (res.data) {
+          } else {
+            // eslint-disable-next-line no-throw-literal
+            throw "Data Loading Error";
+          }
+        });
+      },
+    }),
   });
 
-  return store;
+  return datasource;
 }
 
 export function axiosConfig() {

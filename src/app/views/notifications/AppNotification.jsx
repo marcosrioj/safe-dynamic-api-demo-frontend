@@ -20,17 +20,17 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressStore } from "utils";
+import { createDevExpressDataSource } from "utils";
 import { setNotificationTotalCount } from "app/redux/actions/NotificationActions";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/notifications`;
 const fiedlsToGet = ["id", "type", "title", "message", "timestamp"];
-const store = createDevExpressStore(urlBase, fiedlsToGet);
+const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 class AppNotification extends React.Component {
   constructor(props) {
     super(props);
 
-    store.on("loaded", (e) => {
+    datasource._store.on("loaded", (e) => {
       this.props.setNotificationTotalCount(e.totalCount);
     });
   }
@@ -44,7 +44,7 @@ class AppNotification extends React.Component {
         <div className="py-12" />
         <SimpleCard>
           <DataGrid
-            dataSource={store}
+            dataSource={datasource}
             showBorders={true}
             remoteOperations={true}
             onRowInserting={(e) => {
