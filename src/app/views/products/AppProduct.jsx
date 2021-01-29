@@ -6,18 +6,22 @@ import DataGrid, {
   Paging,
   Pager,
   FilterRow,
-  Editing,
-  Popup,
   Position,
-  Form,
   Sorting,
 } from "devextreme-react/data-grid";
-import { Item } from "devextreme-react/form";
+import { Popup } from "devextreme-react/popup";
 import "whatwg-fetch";
 import { Breadcrumb, SimpleCard } from "matx";
+import Avatar from "react-avatar-edit";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import { Button, Grid } from "@material-ui/core";
 
 import { BACKEND_URL } from "appSettings";
-import { createDevExpressDataSource } from "utils";
+import {
+  createDevExpressDataSource,
+  createImageUrl,
+  fileToBase64,
+} from "utils";
 
 const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
 const fiedlsToGet = ["id", "name", "photo", "price", "stock"];
@@ -28,9 +32,202 @@ function photoRender(data) {
 }
 
 class AppProduct extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      id: "",
+      name: "",
+      price: 0,
+      photo: "",
+      photoURL: "",
+      photoURLLoaded: false,
+      popupFormVisible: false,
+    };
+
+    this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
+    this.onFileLoad = this.onFileLoad.bind(this);
+  }
+
+  cleanState() {
+    this.setState({
+      id: "",
+      name: "",
+      price: 0,
+      photo: "",
+      photoURL: "",
+      photoURLLoaded: false,
+      popupFormVisible: false,
+    });
+  }
+
+  openPopup(e, self) {
+    self.setState({ popupFormVisible: true });
+    e.data.photoURL = createImageUrl(e.data.photo);
+    self.setState({ ...e.data });
+    self.setState({ photoURLLoaded: true });
+  }
+
+  hidePopup(self) {
+    this.cleanState();
+  }
+
+  columnActions(e, self) {
+    return (
+      <>
+        <span
+          className="dx-link dx-link-edit dx-icon-edit dx-link-icon"
+          title="Edit"
+          aria-label="Edit"
+          onClick={() => self.openPopup(e, self)}
+        ></span>
+        &nbsp;
+        <span
+          className="dx-link dx-link-delete dx-icon-trash dx-link-icon"
+          title="Delete"
+          aria-label="Delete"
+        ></span>
+      </>
+    );
+  }
+
+  handleSubmit = (event) => {
+    let data = {};
+    for (const i in this.state) {
+      data[i] = this.state[i];
+    }
+
+    delete data.photoURL;
+    delete data.photoURLLoaded;
+    delete data.popupFormVisible;
+
+    if (this.state.id) {
+      datasource._store.update(this.state.id, data).then(() => {
+        this.cleanState();
+        datasource.reload();
+      });
+    } else {
+      datasource._store.insert(data).then(() => {
+        this.cleanState();
+        datasource.reload();
+      });
+    }
+  };
+
+  handleChange = (event) => {
+    event.persist();
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleBirthdayChange = (birthday) => {
+    this.setState({ birthday });
+  };
+
+  onBeforeFileLoad(elem) {
+    if (elem.target.files[0].size > 716800) {
+      alert("File is too big!");
+      elem.target.value = "";
+    }
+  }
+
+  onFileLoad(file, self) {
+    fileToBase64(file).then((fileBase64) => {
+      const base64 = fileBase64.split(",")[1];
+      self.setState({ photo: base64 });
+    });
+  }
+
+  onFileClose(self) {
+    self.setState({ photo: "" });
+    self.setState({ photoURL: "" });
+  }
+
   render() {
     return (
       <div className="m-sm-30">
+        <Popup
+          title="Client"
+          showTitle={true}
+          width={700}
+          height={525}
+          visible={this.state.popupFormVisible}
+          onHiding={() => this.hidePopup(this)}
+        >
+          <Position my="top" at="top" of={window} />
+
+          <ValidatorForm
+            ref="form"
+            onSubmit={this.handleSubmit}
+            onError={(errors) => null}
+          >
+            <Grid container spacing={6}>
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <div style={{ display: "flex" }}>
+                  <div style={{ marginRight: 25, marginBottom: 25 }}>
+                    {this.state.photoURLLoaded && (
+                      <Avatar
+                        width={120}
+                        height={120}
+                        imageWidth={120}
+                        shadingOpacity={0}
+                        cropColor="transparent"
+                        backgroundColor="transparent"
+                        closeIconColor="#053644"
+                        shadingColor="transparent"
+                        onBeforeFileLoad={this.onBeforeFileLoad}
+                        onFileLoad={(f) => this.onFileLoad(f, this)}
+                        onClose={() => this.onFileClose(this)}
+                        src={this.state.photoURL}
+                        label="Avatar"
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div>
+                      <TextValidator
+                        label="Name"
+                        onChange={this.handleChange}
+                        type="text"
+                        style={{ width: "100%" }}
+                        name="name"
+                        value={this.state.name}
+                        validators={["required"]}
+                        errorMessages={["this field is required"]}
+                      />
+                    </div>
+                    <div style={{ marginTop: 20 }}>
+                      <TextValidator
+                        className="mb-16 w-100"
+                        label="Stock"
+                        onChange={this.handleChange}
+                        type="number"
+                        name="stock"
+                        value={this.state.stock}
+                        validators={["required"]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Grid>
+
+              <Grid item lg={6} md={6} sm={12} xs={12}>
+                <TextValidator
+                  className="mb-16 w-100"
+                  label="Price"
+                  onChange={this.handleChange}
+                  type="number"
+                  name="price"
+                  value={this.state.price}
+                  validators={["required"]}
+                />
+              </Grid>
+            </Grid>
+            <Button color="primary" variant="contained" type="submit">
+              <span className="pl-8 capitalize">Save</span>
+            </Button>
+          </ValidatorForm>
+        </Popup>
+
         <div className="mb-sm-30">
           <Breadcrumb routeSegments={[{ name: "Products" }]} />
         </div>
@@ -44,42 +241,6 @@ class AppProduct extends React.Component {
             <Sorting mode="multiple" />
             <FilterRow visible={true} applyFilter={true} />
 
-            <Editing
-              mode="popup"
-              allowUpdating={true}
-              allowAdding={true}
-              allowDeleting={true}
-            >
-              <Popup title="Product" showTitle={true} width={700} height={325}>
-                <Position my="top" at="top" of={window} />
-              </Popup>
-              <Form>
-                <Item itemType="group" colCount={2} colSpan={2}>
-                  <Item
-                    dataField="name"
-                    dataType="string"
-                    validationRules={[
-                      { type: "required", message: "Name is required." },
-                    ]}
-                  />
-                  <Item
-                    dataField="price"
-                    dataType="number"
-                    validationRules={[
-                      { type: "required", message: "Price is required." },
-                    ]}
-                  />
-                  <Item
-                    dataField="stock"
-                    dataType="number"
-                    validationRules={[
-                      { type: "required", message: "Stock is required." },
-                    ]}
-                  />
-                </Item>
-              </Form>
-            </Editing>
-
             <Column dataField="id" dataType="number" width={75} />
             <Column
               dataField="photo"
@@ -91,6 +252,11 @@ class AppProduct extends React.Component {
             <Column dataField="name" dataType="string" />
             <Column dataField="price" dataType="number" format="currency" />
             <Column dataField="stock" dataType="number" />
+            <Column
+              cellRender={(e) => this.columnActions(e, this)}
+              width={75}
+            />
+
             <Paging defaultPageSize={5} />
             <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} />
           </DataGrid>

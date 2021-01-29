@@ -368,3 +368,13 @@ export const createAvatarUrl = (photoBase4) => {
   }
   return "/assets/images/default-avatar.png";
 };
+
+export const createImageUrl = (photoBase4) => {
+  if (photoBase4) {
+    const contentType = "image/png";
+    const blob = base64toBlob(photoBase4, contentType);
+    const blobUrl = URL.createObjectURL(blob);
+    return blobUrl;
+  }
+  return "/assets/images/noimage.png";
+};
