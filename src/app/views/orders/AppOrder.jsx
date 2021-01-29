@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import "devextreme/data/odata/store";
 import "devextreme/data/odata/store";
 import DataGrid, {
@@ -26,10 +27,15 @@ const fiedlsToGet = [
   "client_id",
   "client_name",
   "product_id",
+  "date",
   "product_name",
   "status",
 ];
-const datasource = createDevExpressDataSource(urlBase, fiedlsToGet, urlViewBase);
+const datasource = createDevExpressDataSource(
+  urlBase,
+  fiedlsToGet,
+  urlViewBase
+);
 
 class AppOrder extends React.Component {
   render() {
@@ -44,6 +50,12 @@ class AppOrder extends React.Component {
             dataSource={datasource}
             showBorders={true}
             remoteOperations={true}
+            onRowInserting={(e) => {
+              e.data.date = moment(
+                e.data.date,
+                "DD/MM/YYYY HH:mm:ss"
+              ).format("YYYY-MM-DD HH:mm:ss");
+            }}
           >
             <Sorting mode="multiple" />
             <FilterRow visible={true} applyFilter={true} />
@@ -86,15 +98,24 @@ class AppOrder extends React.Component {
                       { type: "required", message: "Status is required." },
                     ]}
                   />
+
+                  <Item
+                    dataField="date"
+                    dataType="datetime"
+                    validationRules={[
+                      { type: "required", message: "Date is required." },
+                    ]}
+                  />
                 </Item>
               </Form>
             </Editing>
 
             <Column dataField="id" dataType="number" width={75} />
-            <Column dataField="client_id" dataType="number" />
+            <Column dataField="client_id" dataType="number" visible={false} />
             <Column dataField="client_name" dataType="string" />
-            <Column dataField="product_id" dataType="number" />
+            <Column dataField="product_id" dataType="number" visible={false} />
             <Column dataField="product_name" dataType="string" />
+            <Column dataField="date" dataType="date" />
             <Column dataField="status" dataType="string" />
             <Paging defaultPageSize={5} />
             <Pager showPageSizeSelector={true} allowedPageSizes={[5, 10, 20]} />
