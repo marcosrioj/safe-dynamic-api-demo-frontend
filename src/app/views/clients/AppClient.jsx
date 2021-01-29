@@ -74,8 +74,17 @@ class AppClient extends React.Component {
       popupFormVisible: false,
     };
 
+    this.cleanState = this.cleanState.bind(this);
+    this.openPopup = this.openPopup.bind(this);
+    this.hidePopup = this.hidePopup.bind(this);
+    this.columnActions = this.columnActions.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleBirthdayChange = this.handleBirthdayChange.bind(this);
     this.onBeforeFileLoad = this.onBeforeFileLoad.bind(this);
+    this.onFileClose = this.onFileClose.bind(this);
     this.onFileLoad = this.onFileLoad.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   cleanState() {
@@ -94,9 +103,14 @@ class AppClient extends React.Component {
   }
 
   openPopup(e, self) {
+    if (e && e.data) {
+      e.data.photoURL = createAvatarUrl(e.data.photo);
+      self.setState({ ...e.data });
+    } else {
+      self.cleanState();
+    }
+
     self.setState({ popupFormVisible: true });
-    e.data.photoURL = createAvatarUrl(e.data.photo);
-    self.setState({ ...e.data });
     self.setState({ photoURLLoaded: true });
   }
 
@@ -105,7 +119,11 @@ class AppClient extends React.Component {
   }
 
   deleteItem(e, self) {
-    let result = confirm("Are you sure you want to delete this record?", 'Delete', false);
+    let result = confirm(
+      "Are you sure you want to delete this record?",
+      "Delete",
+      false
+    );
     result.then((dialogResult) => {
       if (dialogResult) {
         self.cleanState();
@@ -245,7 +263,9 @@ class AppClient extends React.Component {
                     <div style={{ marginTop: 20 }}>
                       <TextValidator
                         label="Email"
+                        onChange={this.handleChange}
                         type="email"
+                        name="email"
                         value={this.state.email}
                         style={{ width: "100%" }}
                       />
@@ -332,6 +352,33 @@ class AppClient extends React.Component {
         </div>
         <div className="py-12" />
         <SimpleCard>
+          <div className="dx-datagrid-header-panel">
+            <div className="dx-toolbar dx-widget dx-visibility-change-handler dx-collection">
+              <div className="dx-toolbar-items-container">
+                <div className="dx-toolbar-after">
+                  <div className="dx-item dx-toolbar-item dx-toolbar-button dx-toolbar-item-auto-hide dx-toolbar-text-auto-hide">
+                    <div
+                      className="dx-item-content dx-toolbar-item-content"
+                      onClick={() => this.openPopup(null, this)}
+                    >
+                      <div
+                        className="dx-datagrid-toolbar-button dx-edit-button dx-datagrid-addrow-button dx-button dx-button-normal dx-button-mode-text dx-widget dx-button-has-icon dx-button-has-text"
+                        aria-label="Add a row"
+                        title="Add a row"
+                        role="button"
+                      >
+                        <div className="dx-button-content">
+                          <i className="dx-icon dx-icon-edit-button-addrow"></i>
+                          <span className="dx-button-text">Add a row</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <DataGrid
             dataSource={datasource}
             showBorders={true}
