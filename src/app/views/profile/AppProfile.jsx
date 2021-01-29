@@ -162,7 +162,9 @@ class AppProfile extends React.Component {
                     <div style={{ marginTop: 20 }}>
                       <TextValidator
                         label="Email"
+                        onChange={this.handleChange}
                         type="email"
+                        name="email"
                         value={email}
                         style={{ width: "100%" }}
                       />
