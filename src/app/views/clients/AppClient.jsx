@@ -266,7 +266,7 @@ class AppClient extends React.Component {
                         onChange={this.handleChange}
                         type="email"
                         name="email"
-                        value={this.state.email}
+                        value={this.state.email || ""}
                         style={{ width: "100%" }}
                       />
                     </div>
@@ -298,7 +298,7 @@ class AppClient extends React.Component {
                   onChange={this.handleChange}
                   type="text"
                   name="mobile_number"
-                  value={this.state.mobile_number}
+                  value={this.state.mobile_number || ""}
                   validators={["maxStringLength: 20"]}
                   errorMessages={["max length is 20"]}
                 />
@@ -337,7 +337,7 @@ class AppClient extends React.Component {
                   rows={4}
                   multiline={true}
                   onChange={this.handleChange}
-                  value={this.state.biography}
+                  value={this.state.biography || ""}
                 />
               </Grid>
             </Grid>
