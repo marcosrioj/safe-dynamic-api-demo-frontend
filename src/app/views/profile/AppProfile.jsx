@@ -67,11 +67,11 @@ class AppProfile extends React.Component {
     data.type = this.props.user.type;
     delete data.photoURL;
     delete data.photoURLLoaded;
-    delete data.email;
 
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
 
     if (this.state.id) {
+      delete data.email;
       profileService.updateProfile(this.state.id, data).then((user) => {
         this.props.setUserData(user);
       });
