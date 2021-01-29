@@ -29,6 +29,7 @@ import {
 } from "@material-ui/pickers";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+import { confirm } from "devextreme/ui/dialog";
 
 import { BACKEND_URL } from "appSettings";
 import {
@@ -103,6 +104,18 @@ class AppClient extends React.Component {
     this.cleanState();
   }
 
+  deleteItem(e, self) {
+    let result = confirm("Are you sure you want to delete this record?", 'Delete', false);
+    result.then((dialogResult) => {
+      if (dialogResult) {
+        self.cleanState();
+        datasource._store.remove(e.data.id).then(() => {
+          datasource.reload();
+        });
+      }
+    });
+  }
+
   columnActions(e, self) {
     return (
       <>
@@ -117,6 +130,7 @@ class AppClient extends React.Component {
           className="dx-link dx-link-delete dx-icon-trash dx-link-icon"
           title="Delete"
           aria-label="Delete"
+          onClick={() => self.deleteItem(e, self)}
         ></span>
       </>
     );

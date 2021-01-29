@@ -15,6 +15,7 @@ import { Breadcrumb, SimpleCard } from "matx";
 import Avatar from "react-avatar-edit";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { Button, Grid } from "@material-ui/core";
+import { confirm } from "devextreme/ui/dialog";
 
 import { BACKEND_URL } from "appSettings";
 import {
@@ -86,6 +87,7 @@ class AppProduct extends React.Component {
           className="dx-link dx-link-delete dx-icon-trash dx-link-icon"
           title="Delete"
           aria-label="Delete"
+          onClick={() => self.deleteItem(e, self)}
         ></span>
       </>
     );
@@ -140,6 +142,22 @@ class AppProduct extends React.Component {
   onFileClose(self) {
     self.setState({ photo: "" });
     self.setState({ photoURL: "" });
+  }
+
+  deleteItem(e, self) {
+    let result = confirm(
+      "Are you sure you want to delete this record?",
+      "Delete",
+      false
+    );
+    result.then((dialogResult) => {
+      if (dialogResult) {
+        self.cleanState();
+        datasource._store.remove(e.data.id).then(() => {
+          datasource.reload();
+        });
+      }
+    });
   }
 
   render() {
