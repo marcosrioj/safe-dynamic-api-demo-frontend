@@ -226,7 +226,7 @@ class AppClient extends React.Component {
             onError={(errors) => null}
           >
             <Grid container spacing={6}>
-              <Grid item lg={6} md={6} sm={12} xs={12}>
+              <Grid item lg={8} md={8} sm={12} xs={12}>
                 <div style={{ display: "flex" }}>
                   <div style={{ marginRight: 25, marginBottom: 25 }}>
                     {this.state.photoURLLoaded && (
@@ -291,7 +291,7 @@ class AppClient extends React.Component {
                 </MuiPickersUtilsProvider>
               </Grid>
 
-              <Grid item lg={6} md={6} sm={12} xs={12}>
+              <Grid item lg={4} md={4} sm={12} xs={12}>
                 <TextValidator
                   className="mb-16 w-100"
                   label="Mobile Number"

@@ -190,7 +190,7 @@ class AppProduct extends React.Component {
             onError={(errors) => null}
           >
             <Grid container spacing={6}>
-              <Grid item lg={6} md={6} sm={12} xs={12}>
+              <Grid item lg={9} md={9} sm={12} xs={12}>
                 <div style={{ display: "flex" }}>
                   <div style={{ marginRight: 25, marginBottom: 25 }}>
                     {this.state.photoURLLoaded && (
@@ -239,7 +239,7 @@ class AppProduct extends React.Component {
                 </div>
               </Grid>
 
-              <Grid item lg={6} md={6} sm={12} xs={12}>
+              <Grid item lg={3} md={3} sm={12} xs={12}>
                 <TextValidator
                   className="mb-16 w-100"
                   label="Price"
@@ -306,8 +306,8 @@ class AppProduct extends React.Component {
               cellRender={photoRender}
             />
             <Column dataField="name" dataType="string" />
-            <Column dataField="price" dataType="number" format="currency" />
-            <Column dataField="stock" dataType="number" />
+            <Column dataField="price" dataType="number" format="currency"  width={150} />
+            <Column dataField="stock" dataType="number"  width={150} />
             <Column
               cellRender={(e) => this.columnActions(e, this)}
               width={75}

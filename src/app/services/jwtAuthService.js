@@ -20,7 +20,7 @@ class JwtAuthService {
             axios.post(`${BACKEND_URL}/auth/me`).then((res2) => {
               if (res2.data.id) {
                 axios
-                  .get(`${BACKEND_URL}/dynamicapi/records/clients`)
+                  .get(`${BACKEND_URL}/dynamicapi/records/profile`)
                   .then((res3) => {
                     if (res3.data.records && res3.data.records.length > 0) {
                       const client = res3.data.records[0];
