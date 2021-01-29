@@ -71,7 +71,6 @@ class AppProfile extends React.Component {
     data.birthday = moment(data.birthday).format("YYYY-MM-DD");
 
     if (this.state.id) {
-      delete data.email;
       profileService.updateProfile(this.state.id, data).then((user) => {
         this.props.setUserData(user);
       });
