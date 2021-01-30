@@ -66,6 +66,7 @@ class AppClient extends React.Component {
       email: "",
       birthday: new Date(),
       mobile_number: "",
+      is_active: true,
       genre: "",
       biography: "",
       photo: "",
@@ -92,6 +93,7 @@ class AppClient extends React.Component {
       id: "",
       name: "",
       email: "",
+      is_active: true,
       birthday: new Date(),
       mobile_number: "",
       genre: "",
@@ -105,6 +107,7 @@ class AppClient extends React.Component {
   openPopup(e, self) {
     if (e && e.data) {
       e.data.photoURL = createAvatarUrl(e.data.photo);
+      e.data.is_active = e.data.is_active === true ? "true" : "false";
       self.setState({ ...e.data });
     } else {
       self.cleanState();
@@ -159,6 +162,8 @@ class AppClient extends React.Component {
     for (const i in this.state) {
       data[i] = this.state[i];
     }
+
+    data.is_active = data.is_active === "true" ? true : false;
 
     delete data.photoURL;
     delete data.photoURLLoaded;
@@ -325,6 +330,27 @@ class AppClient extends React.Component {
                     value="others"
                     control={<Radio color="secondary" />}
                     label="Others"
+                    labelPlacement="end"
+                  />
+                </RadioGroup>
+
+                <RadioGroup
+                  className="mb-16"
+                  value={this.state.is_active}
+                  name="is_active"
+                  onChange={this.handleChange}
+                  row
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="secondary" />}
+                    label="True"
+                    labelPlacement="end"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio color="secondary" />}
+                    label="False"
                     labelPlacement="end"
                   />
                 </RadioGroup>

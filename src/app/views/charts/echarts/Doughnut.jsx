@@ -2,7 +2,27 @@ import React from "react";
 import ReactEcharts from "echarts-for-react";
 import { withStyles } from "@material-ui/styles";
 
-const DoughnutChart = ({ height, color = [], theme }) => {
+const DoughnutChart = ({ height, color = [], theme, campaignsStats }) => {
+  const thisYear = new Date().getFullYear();
+  const campaignsStatsThisYear = campaignsStats.filter(
+    (c) => c.year === thisYear.toString()
+  );
+
+  const totalCampaignsThisYear = campaignsStatsThisYear.reduce(
+    (accumulator, currentValue) => {
+      return accumulator + parseFloat(currentValue.total);
+    },
+    0
+  );
+
+  const data = campaignsStatsThisYear.map((c) => {
+    const value = (
+      (parseFloat(c.total) * 100) /
+      totalCampaignsThisYear
+    ).toFixed(2);
+    return { value: value, name: c.name };
+  });
+
   const option = {
     legend: {
       show: true,
@@ -12,33 +32,33 @@ const DoughnutChart = ({ height, color = [], theme }) => {
       textStyle: {
         color: theme.palette.text.secondary,
         fontSize: 13,
-        fontFamily: "roboto"
-      }
+        fontFamily: "roboto",
+      },
     },
     tooltip: {
       show: false,
       trigger: "item",
-      formatter: "{a} <br/>{b}: {c} ({d}%)"
+      formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
     xAxis: [
       {
         axisLine: {
-          show: false
+          show: false,
         },
         splitLine: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     ],
     yAxis: [
       {
         axisLine: {
-          show: false
+          show: false,
         },
         splitLine: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     ],
 
     series: [
@@ -57,45 +77,35 @@ const DoughnutChart = ({ height, color = [], theme }) => {
             textStyle: {
               color: theme.palette.text.secondary,
               fontSize: 13,
-              fontFamily: "roboto"
+              fontFamily: "roboto",
             },
-            formatter: "{a}"
+            formatter: "{a}",
           },
           emphasis: {
             show: true,
             textStyle: {
               fontSize: "14",
-              fontWeight: "normal"
+              fontWeight: "normal",
               // color: "rgba(15, 21, 77, 1)"
             },
-            formatter: "{b} \n{c} ({d}%)"
-          }
+            formatter: "{b} \n{c} ({d}%)",
+          },
         },
         labelLine: {
           normal: {
-            show: false
-          }
+            show: false,
+          },
         },
-        data: [
-          {
-            value: 65,
-            name: "Google"
-          },
-          {
-            value: 20,
-            name: "Facebook"
-          },
-          { value: 15, name: "Others" }
-        ],
+        data: data,
         itemStyle: {
           emphasis: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)"
-          }
-        }
-      }
-    ]
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      },
+    ],
   };
 
   return (
@@ -103,7 +113,7 @@ const DoughnutChart = ({ height, color = [], theme }) => {
       style={{ height: height }}
       option={{
         ...option,
-        color: [...color]
+        color: [...color],
       }}
     />
   );

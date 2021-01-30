@@ -9,9 +9,46 @@ import TableCard from "./shared/TableCard";
 import StatCards2 from "./shared/StatCards2";
 import Campaigns from "./shared/Campaigns";
 import { withStyles } from "@material-ui/styles";
+import dashboardService from "../../services/dashboardService";
 
 class Dashboard1 extends Component {
-  state = {};
+  state = {
+    chartData: { seriesData: [], xData: [] },
+    generalStats: {},
+    campaignsStats: [],
+  };
+
+  componentDidMount() {
+    dashboardService.getYearSalesByMonth().then((data) => {
+      const chartData = {
+        seriesData: Object.values(data),
+        xData: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+      };
+
+      this.setState({ chartData });
+    });
+
+    dashboardService.getGeneralStats().then((data) => {
+      this.setState({ generalStats: data });
+    });
+
+    dashboardService.getCampaignsStats().then((data) => {
+      this.setState({ campaignsStats: data });
+    });
+  }
 
   render() {
     let { theme } = this.props;
@@ -24,25 +61,21 @@ class Dashboard1 extends Component {
             option={{
               series: [
                 {
-                  data: [34, 45, 31, 45, 31, 43, 26, 43, 31, 45, 33, 40],
+                  data: this.state.chartData.seriesData,
                   type: "line",
+                  name: "Total sales",
                 },
               ],
               xAxis: {
-                data: [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ],
+                data: this.state.chartData.xData,
+              },
+              yAxis: {
+                min: parseInt(Math.min(...this.state.chartData.seriesData) / 2),
+                max: Math.max(...this.state.chartData.seriesData),
+                labels: {
+                  style: { width: "100px" },
+                  useHTML: true,
+                },
               },
             }}
           ></ModifiedAreaChart>
@@ -51,19 +84,20 @@ class Dashboard1 extends Component {
         <div className="analytics m-sm-30 mt--72">
           <Grid container spacing={3}>
             <Grid item lg={8} md={8} sm={12} xs={12}>
-              <StatCards theme={theme} />
+              <StatCards theme={theme} generalStats={this.state.generalStats} />
 
               {/* Top Selling Products */}
               <TableCard />
 
-              <StatCards2 />
+              <StatCards2 generalStats={this.state.generalStats} />
             </Grid>
 
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <Card className="px-24 py-16 mb-16">
                 <div className="card-title">Campaigns</div>
-                <div className="card-subtitle">Last 30 days</div>
+                <div className="card-subtitle">This year</div>
                 <DoughnutChart
+                  campaignsStats={this.state.campaignsStats}
                   height="300px"
                   color={[
                     theme.palette.primary.dark,
@@ -73,7 +107,7 @@ class Dashboard1 extends Component {
                 />
               </Card>
 
-              <Campaigns />
+              <Campaigns campaignsStats={this.state.campaignsStats} />
             </Grid>
           </Grid>
         </div>
