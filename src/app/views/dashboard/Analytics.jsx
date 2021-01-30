@@ -79,8 +79,7 @@ class Dashboard1 extends Component {
                 min: parseInt(Math.min(...this.state.chartData.seriesData) / 2),
                 max: Math.max(...this.state.chartData.seriesData),
                 labels: {
-                  style: { width: "100px" },
-                  useHTML: true,
+                  enable: false,
                 },
               },
             }}

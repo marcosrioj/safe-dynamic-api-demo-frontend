@@ -235,7 +235,7 @@ export function createDevExpressDataSource(apiBase, fieldsToGet, urlViewBase) {
     store: new CustomStore({
       key: "id",
       load: function (loadOptions) {
-        let params = "?";
+        let params = apiBase.indexOf("?") >= 0 ? "&" : "?";
 
         //Page
         const page = loadOptions.skip / loadOptions.take + 1;

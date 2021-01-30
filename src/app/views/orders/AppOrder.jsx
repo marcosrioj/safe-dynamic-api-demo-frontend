@@ -20,8 +20,8 @@ import { Breadcrumb, SimpleCard } from "matx";
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressDataSource } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/orders`;
-const urlViewBase = `${BACKEND_URL}/dynamicapi/records/orders_view`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/orders?order=date,desc`;
+const urlViewBase = `${BACKEND_URL}/dynamicapi/records/orders_view?order=date,desc`;
 const fiedlsToGet = [
   "id",
   "client_id",

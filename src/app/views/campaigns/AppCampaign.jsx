@@ -20,7 +20,7 @@ import { Breadcrumb, SimpleCard } from "matx";
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressDataSource } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/campaigns`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/campaigns?order=date,desc`;
 const fiedlsToGet = ["id", "name", "budget", "date"];
 const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 
