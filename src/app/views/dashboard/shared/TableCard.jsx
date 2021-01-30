@@ -1,49 +1,15 @@
 import React from "react";
 import {
   Card,
-  Icon,
-  IconButton,
   Table,
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
 } from "@material-ui/core";
+import { numFormatter } from "utils";
 
-const TableCard = () => {
-  const productList = [
-    {
-      imgUrl: "/assets/images/products/headphone-2.jpg",
-      name: "earphone",
-      price: 100,
-      available: 15
-    },
-    {
-      imgUrl: "/assets/images/products/headphone-3.jpg",
-      name: "earphone",
-      price: 1500,
-      available: 30
-    },
-    {
-      imgUrl: "/assets/images/products/iphone-2.jpg",
-      name: "iPhone x",
-      price: 1900,
-      available: 35
-    },
-    {
-      imgUrl: "/assets/images/products/iphone-1.jpg",
-      name: "iPhone x",
-      price: 100,
-      available: 0
-    },
-    {
-      imgUrl: "/assets/images/products/headphone-3.jpg",
-      name: "Head phone",
-      price: 1190,
-      available: 5
-    }
-  ];
-
+const TableCard = ({ top5Sales }) => {
   return (
     <Card elevation={3} className="pt-20 mb-24">
       <div className="card-title px-24 mb-12">top selling products</div>
@@ -51,45 +17,49 @@ const TableCard = () => {
         <Table className="product-table">
           <TableHead>
             <TableRow>
-              <TableCell className="px-24" colSpan={4}>
+              <TableCell className="px-24" colSpan={5}>
                 Name
               </TableCell>
-              <TableCell className="px-0" colSpan={2}>
-                Revenue
+              <TableCell className="px-0" colSpan={1}>
+                Total
+              </TableCell>
+              <TableCell className="px-0" colSpan={1}>
+                Sales
               </TableCell>
               <TableCell className="px-0" colSpan={2}>
                 Stock Status
               </TableCell>
-              <TableCell className="px-0" colSpan={1}>
-                Action
-              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {productList.map((product, index) => (
+            {top5Sales.map((product, index) => (
               <TableRow key={index}>
-                <TableCell className="px-0 capitalize" colSpan={4} align="left">
+                <TableCell className="px-0 capitalize" colSpan={5} align="left">
                   <div className="flex flex-middle">
                     <img
                       className="circular-image-small"
-                      src={product.imgUrl}
+                      src={`data:image/jpg;base64,${product.product_photo}`}
                       alt="user"
                     />
-                    <p className="m-0 ml-8">{product.name}</p>
+                    <p className="m-0 ml-8">{product.product_name}</p>
                   </div>
                 </TableCell>
-                <TableCell className="px-0 capitalize" align="left" colSpan={2}>
-                  $
+                <TableCell className="px-0 capitalize" align="left" colSpan={1}>
+                  ${numFormatter(parseFloat(product.total_price_sales))}
                   {product.price > 999
                     ? (product.price / 1000).toFixed(1) + "k"
                     : product.price}
                 </TableCell>
 
+                <TableCell className="px-0 capitalize" align="left" colSpan={1}>
+                  {product.total_sales}
+                </TableCell>
+
                 <TableCell className="px-0" align="left" colSpan={2}>
-                  {product.available ? (
-                    product.available < 20 ? (
+                  {product.product_stock ? (
+                    product.product_stock < 1000 ? (
                       <small className="border-radius-4 bg-secondary text-white px-8 py-2 ">
-                        {product.available} available
+                        {product.product_stock} available
                       </small>
                     ) : (
                       <small className="border-radius-4 bg-primary text-white px-8 py-2 ">
@@ -101,11 +71,6 @@ const TableCard = () => {
                       out of stock
                     </small>
                   )}
-                </TableCell>
-                <TableCell className="px-0" colSpan={1}>
-                  <IconButton>
-                    <Icon color="primary">edit</Icon>
-                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

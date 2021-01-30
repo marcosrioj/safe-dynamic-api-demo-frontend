@@ -41,6 +41,19 @@ class DashboardService {
         }
       });
   };
+
+  getTop5Sales = () => {
+    return axios
+      .get(`${BACKEND_URL}/dynamicapi/records/top5_products`)
+      .then((res) => {
+        if (res.data && res.data.records) {
+          return res.data.records;
+        } else {
+          // eslint-disable-next-line no-throw-literal
+          throw "GetCampaignsStats Data Loading Error";
+        }
+      });
+  };
 }
 
 export default new DashboardService();

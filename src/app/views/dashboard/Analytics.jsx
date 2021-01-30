@@ -16,6 +16,7 @@ class Dashboard1 extends Component {
     chartData: { seriesData: [], xData: [] },
     generalStats: {},
     campaignsStats: [],
+    top5Sales: [],
   };
 
   componentDidMount() {
@@ -47,6 +48,11 @@ class Dashboard1 extends Component {
 
     dashboardService.getCampaignsStats().then((data) => {
       this.setState({ campaignsStats: data });
+    });
+
+    dashboardService.getTop5Sales().then((data) => {
+      console.log(data);
+      this.setState({ top5Sales: data });
     });
   }
 
@@ -87,7 +93,7 @@ class Dashboard1 extends Component {
               <StatCards theme={theme} generalStats={this.state.generalStats} />
 
               {/* Top Selling Products */}
-              <TableCard />
+              <TableCard top5Sales={this.state.top5Sales} />
 
               <StatCards2 generalStats={this.state.generalStats} />
             </Grid>
