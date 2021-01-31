@@ -2,33 +2,100 @@ import React, { Component } from "react";
 import {
   Card,
   Checkbox,
-  FormControlLabel,
   Grid,
-  Button
+  Button,
+  Snackbar,
+  MenuItem,
 } from "@material-ui/core";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import MuiAlert from "@material-ui/lab/Alert";
+import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from "react-material-ui-form-validator";
 import { connect } from "react-redux";
+
+import jwtAuthService from "app/services/jwtAuthService";
+import history from "history.js";
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 class SignUp extends Component {
   state = {
-    username: "",
+    name: "",
     email: "",
     password: "",
-    agreement: ""
+    terms: false,
+    role_id: "",
+    openMessage: false,
+    roles: [],
   };
 
-  handleChange = event => {
+  componentDidMount() {
+    jwtAuthService.getRoles().then((roles) => {
+      this.setState({ roles });
+    });
+  }
+
+  handleChange = (event) => {
     event.persist();
+    const value =
+      event.target.name === "terms"
+        ? !(event.target.value === "true" ? true : false)
+        : event.target.value;
+
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: value,
     });
   };
 
-  handleFormSubmit = event => {};
+  handleFormSubmit = (event) => {
+    const data = { ...this.state };
+    data.password_confirmation = data.password;
+    delete data.openMessage;
+    delete data.roles;
+
+    jwtAuthService
+      .register(data)
+      .then((d) => {
+        history.push({
+          pathname: "/",
+        });
+      })
+      .catch((err) => {
+        this.setState({ openMessage: true });
+      });
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ openMessage: false });
+  };
+
   render() {
-    let { username, email, password } = this.state;
+    let { name, email, password, terms, role_id, roles } = this.state;
+
     return (
       <div className="signup flex flex-center w-100 h-100vh">
+        <Snackbar
+          open={this.state.openMessage}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+        >
+          <Alert
+            onClose={this.handleClose}
+            severity="error"
+            style={{ color: "#fff" }}
+          >
+            It was not possible to register a new user. Check the fields again.
+          </Alert>
+        </Snackbar>
+
         <div className="p-8">
           <Card className="signup-card position-relative y-center">
             <Grid container>
@@ -46,11 +113,11 @@ class SignUp extends Component {
                     <TextValidator
                       className="mb-24 w-100"
                       variant="outlined"
-                      label="Username"
+                      label="Name"
                       onChange={this.handleChange}
                       type="text"
-                      name="username"
-                      value={username}
+                      name="name"
+                      value={name}
                       validators={["required"]}
                       errorMessages={["this field is required"]}
                     />
@@ -65,11 +132,11 @@ class SignUp extends Component {
                       validators={["required", "isEmail"]}
                       errorMessages={[
                         "this field is required",
-                        "email is not valid"
+                        "email is not valid",
                       ]}
                     />
                     <TextValidator
-                      className="mb-16 w-100"
+                      className="mb-24 w-100"
                       label="Password"
                       variant="outlined"
                       onChange={this.handleChange}
@@ -79,13 +146,36 @@ class SignUp extends Component {
                       validators={["required"]}
                       errorMessages={["this field is required"]}
                     />
-                    <FormControlLabel
-                      className="mb-16"
-                      name="agreement"
+
+                    <SelectValidator
+                      className="mb-16 w-100"
+                      label="Role"
+                      variant="outlined"
                       onChange={this.handleChange}
-                      control={<Checkbox />}
-                      label="I have read and agree to the terms of service."
+                      name="role_id"
+                      value={role_id}
+                      validators={["required"]}
+                      errorMessages={["this field is required"]}
+                    >
+                      {roles.map((r) => (
+                        <MenuItem key={r.id} value={r.id}>
+                          {r.name}
+                        </MenuItem>
+                      ))}
+                    </SelectValidator>
+
+                    <Checkbox
+                      checked={terms}
+                      style={{ paddingLeft: 0 }}
+                      name="terms"
+                      required
+                      value={terms}
+                      onChange={this.handleChange}
+                      inputProps={{ "aria-label": "primary checkbox" }}
                     />
+                    <span style={{ fontSize: 11 }}>
+                      I have read and agree to the terms of service.
+                    </span>
                     <div className="flex flex-middle">
                       <Button
                         className="capitalize"
@@ -116,11 +206,6 @@ class SignUp extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  // setUser: PropTypes.func.isRequired
-});
+const mapStateToProps = () => ({});
 
-export default connect(
-  mapStateToProps,
-  {}
-)(SignUp);
+export default connect(mapStateToProps, {})(SignUp);

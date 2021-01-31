@@ -101,6 +101,74 @@ class JwtAuthService {
   removeUser = () => {
     localStorage.removeItem("auth_user");
   };
+
+  register = (data) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${BACKEND_URL}/api/register`, data).then(
+        (res) => {
+          if (res && res.data.access_token) {
+            this.setSession(res.data.access_token);
+
+            axios.post(`${BACKEND_URL}/auth/me`).then((res2) => {
+              if (res2.data.id) {
+                axios
+                  .get(`${BACKEND_URL}/dynamicapi/records/profile`)
+                  .then((res3) => {
+                    if (res3.data.records && res3.data.records.length > 0) {
+                      const client = res3.data.records[0];
+                      const photoURL = createAvatarUrl(client.photo);
+                      resolve({
+                        user_id: res2.data.id,
+                        type: res2.data.type,
+                        name: res2.data.name,
+                        email: res2.data.email,
+                        photo: client.photo,
+                        photoURL: photoURL,
+                      });
+                    } else {
+                      resolve({
+                        user_id: res2.data.id,
+                        type: res2.data.type,
+                        name: res2.data.name,
+                        email: res2.data.email,
+                      });
+                    }
+                  });
+              } else {
+                reject(res2);
+              }
+            });
+          } else {
+            reject(res);
+          }
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    }).then((data) => {
+      // Login successful
+      // Set user
+      this.setUser(data);
+      return data;
+    });
+  };
+
+  getRoles = () => {
+    return axios
+      .get(
+        `${BACKEND_URL}/dynamicapi/records/roles?include=id,name&filter=type,eq,user`
+      )
+      .then((res) => {
+        if (res.data && res.data.records) {
+          return res.data.records;
+        } else {
+          // eslint-disable-next-line no-throw-literal
+          throw "GetCampaignsStats Data Loading Error";
+        }
+      });
+  };
 }
 
 export default new JwtAuthService();
