@@ -6,18 +6,21 @@ import {
   Grid,
   Button,
   withStyles,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import { withRouter } from "react-router-dom";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import GTranslateIcon from "@material-ui/icons/GTranslate";
 
 import { loginWithEmailAndPassword } from "../../redux/actions/LoginActions";
+import { BACKEND_URL, FRONTEND_URL } from "appSettings";
 
-const styles = theme => ({
+const styles = (theme) => ({
   wrapper: {
-    position: "relative"
+    position: "relative",
   },
 
   buttonProgress: {
@@ -25,23 +28,23 @@ const styles = theme => ({
     top: "50%",
     left: "50%",
     marginTop: -12,
-    marginLeft: -12
-  }
+    marginLeft: -12,
+  },
 });
 
 class SignIn extends Component {
   state = {
     email: "user@user.com",
     password: "1234rewq",
-    agreement: ""
+    agreement: "",
   };
-  handleChange = event => {
+  handleChange = (event) => {
     event.persist();
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
-  handleFormSubmit = event => {
+  handleFormSubmit = (event) => {
     this.props.loginWithEmailAndPassword({ ...this.state });
   };
   render() {
@@ -71,7 +74,7 @@ class SignIn extends Component {
                       validators={["required", "isEmail"]}
                       errorMessages={[
                         "this field is required",
-                        "email is not valid"
+                        "email is not valid",
                       ]}
                     />
                     <TextValidator
@@ -127,6 +130,40 @@ class SignIn extends Component {
                     >
                       Forgot password?
                     </Button>
+                    <br />
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="secondary"
+                      href={`${BACKEND_URL}/login/facebook?redirectTo=${FRONTEND_URL}/session/external-signin`}
+                      style={{
+                        marginTop: 10,
+                        marginBottom: 10,
+                        marginRight: 20,
+                        color: "#fff !important",
+                      }}
+                    >
+                      <FacebookIcon
+                        style={{
+                          marginRight: 5,
+                        }}
+                      />
+                      Login with Facebook
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="secondary"
+                      href={`${BACKEND_URL}/login/google?redirectTo=${FRONTEND_URL}/session/external-signin`}
+                      style={{}}
+                    >
+                      <GTranslateIcon
+                        style={{
+                          marginRight: 5,
+                        }}
+                      />
+                      {"  "}Login with Google
+                    </Button>
                   </ValidatorForm>
                 </div>
               </Grid>
@@ -138,15 +175,10 @@ class SignIn extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loginWithEmailAndPassword: PropTypes.func.isRequired,
-  login: state.login
+  login: state.login,
 });
 export default withStyles(styles, { withTheme: true })(
-  withRouter(
-    connect(
-      mapStateToProps,
-      { loginWithEmailAndPassword }
-    )(SignIn)
-  )
+  withRouter(connect(mapStateToProps, { loginWithEmailAndPassword })(SignIn))
 );

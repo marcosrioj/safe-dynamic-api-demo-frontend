@@ -3,6 +3,7 @@ import SignIn from "./SignIn";
 import NotFound from "./NotFound";
 import ForgotPassword from "./ForgotPassword";
 import ForgotPasswordToken from "./ForgotPasswordToken";
+import ExternalSignin from "./ExternalSignin";
 
 const settings = {
   activeLayout: "layout1",
@@ -35,6 +36,11 @@ const sessionRoutes = [
   {
     path: "/session/signin",
     component: SignIn,
+    settings,
+  },
+  {
+    path: "/session/external-signin",
+    component: ExternalSignin,
     settings,
   },
   {
