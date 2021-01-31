@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { BACKEND_URL } from "appSettings";
+import { BACKEND_URL, FRONTEND_URL } from "appSettings";
 import localStorageService from "./localStorageService";
 import { createAvatarUrl } from "utils";
 
@@ -168,6 +168,21 @@ class JwtAuthService {
           throw "GetCampaignsStats Data Loading Error";
         }
       });
+  };
+
+  forgotPassword = (email) => {
+    const returnUrl = `${FRONTEND_URL}/session/forgot-password/token`;
+    return axios
+      .post(`${BACKEND_URL}/api/password/email`, { email, returnUrl })
+      .then((res) => {
+        return res.data;
+      });
+  };
+
+  forgotPasswordToken = (data) => {
+    return axios.post(`${BACKEND_URL}/api/password/reset`, data).then((res) => {
+      return res.data;
+    });
   };
 }
 

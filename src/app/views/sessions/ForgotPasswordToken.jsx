@@ -3,15 +3,16 @@ import {
   Card,
   Grid,
   Button,
-  withStyles,
-  CircularProgress,
   Snackbar,
+  CircularProgress,
+  withStyles,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
-import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import { withRouter } from "react-router-dom";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import { connect } from "react-redux";
 
 import jwtAuthService from "app/services/jwtAuthService";
+import history from "history.js";
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -35,13 +36,21 @@ const styles = (theme) => ({
   },
 });
 
-class ForgotPassword extends Component {
+class ForgotPasswordToken extends Component {
   state = {
     email: "",
+    token: "",
+    password: "",
     loading: false,
     openMessageSuccess: false,
     openMessageError: false,
   };
+
+  componentDidMount() {
+    const params = new URLSearchParams(this.props.location.search);
+    this.setState({ email: params.get("email"), token: params.get("token") });
+  }
+
   handleChange = (event) => {
     event.persist();
     this.setState({
@@ -49,93 +58,110 @@ class ForgotPassword extends Component {
     });
   };
 
-  handleFormSubmit = () => {
-    this.setState({ loading: true });
+  handleFormSubmit = (event) => {
+    const data = { ...this.state };
+    data.password_confirmation = data.password;
+    delete data.openMessageError;
+    delete data.openMessageSuccess;
+    delete data.loading;
 
+    this.setState({ loading: true });
     jwtAuthService
-      .forgotPassword(this.state.email)
-      .then((data) => {
-        this.setState({ loading: false, openMessageSuccess: true, email: "" });
+      .forgotPasswordToken(data)
+      .then((d) => {
+        this.setState({ loading: false, openMessageSuccess: true });
       })
-      .catch((error) => {
+      .catch((err) => {
         this.setState({ loading: false, openMessageError: true });
       });
   };
 
-  handleClose = (event, reason) => {
+  handleCloseSuccess = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
 
     this.setState({ openMessageSuccess: false });
+
+    history.push({
+      pathname: "/session/signin",
+    });
+  };
+
+  handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
     this.setState({ openMessageError: false });
   };
 
   render() {
-    let { email, loading } = this.state;
+    let { password, loading } = this.state;
 
     return (
       <div className="signup flex flex-center w-100 h-100vh">
         <Snackbar
           open={this.state.openMessageSuccess}
           autoHideDuration={6000}
-          onClose={this.handleClose}
+          onClose={this.handleCloseSuccess}
         >
           <Alert
-            onClose={this.handleClose}
+            onClose={this.handleCloseSuccess}
             severity="success"
             className={this.props.classes.colorWhite}
           >
-            We have e-mailed your password reset link!
+            Password successfully reset! Log in with the new password.
           </Alert>
         </Snackbar>
 
         <Snackbar
           open={this.state.openMessageError}
           autoHideDuration={6000}
-          onClose={this.handleClose}
+          onClose={this.handleCloseError}
         >
           <Alert
-            onClose={this.handleClose}
+            onClose={this.handleCloseError}
             severity="error"
             className={this.props.classes.colorWhite}
           >
             The given data was invalid.
           </Alert>
         </Snackbar>
-
         <div className="p-8">
           <Card className="signup-card position-relative y-center">
             <Grid container>
               <Grid item lg={5} md={5} sm={5} xs={12}>
-                <div className="p-32 flex flex-center flex-middle h-100">
-                  <img src="/assets/images/illustrations/dreamer.svg" alt="" />
+                <div className="p-32 flex flex-center bg-light-gray flex-middle h-100">
+                  <img
+                    src="/assets/images/illustrations/posting_photo.svg"
+                    alt=""
+                  />
                 </div>
               </Grid>
               <Grid item lg={7} md={7} sm={7} xs={12}>
-                <div className="p-36 h-100 bg-light-gray position-relative">
+                <div className="p-36 h-100">
                   <ValidatorForm ref="form" onSubmit={this.handleFormSubmit}>
                     <TextValidator
                       className="mb-24 w-100"
+                      label="New password"
                       variant="outlined"
-                      label="Email"
                       onChange={this.handleChange}
-                      type="email"
-                      name="email"
-                      value={email}
-                      validators={["required", "isEmail"]}
-                      errorMessages={[
-                        "this field is required",
-                        "email is not valid",
-                      ]}
+                      name="password"
+                      type="password"
+                      value={password}
+                      validators={["required"]}
+                      errorMessages={["this field is required"]}
                     />
+
                     <div className="flex flex-middle">
                       <div className={this.props.classes.wrapper}>
                         <Button
+                          className="capitalize"
                           variant="contained"
                           color="primary"
-                          type="submit"
                           disabled={loading}
+                          type="submit"
                         >
                           Reset Password
                         </Button>
@@ -145,7 +171,6 @@ class ForgotPassword extends Component {
                             className={this.props.classes.buttonProgress}
                           />
                         )}
-
                         <span className="ml-16 mr-8">or</span>
                         <Button
                           className="capitalize"
@@ -168,6 +193,8 @@ class ForgotPassword extends Component {
   }
 }
 
+const mapStateToProps = () => ({});
+
 export default withStyles(styles, { withTheme: true })(
-  withRouter(ForgotPassword)
+  connect(mapStateToProps, {})(ForgotPasswordToken)
 );

@@ -6,6 +6,8 @@ import {
   Button,
   Snackbar,
   MenuItem,
+  CircularProgress,
+  withStyles,
 } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
 import {
@@ -22,6 +24,24 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
+const styles = (theme) => ({
+  wrapper: {
+    position: "relative",
+  },
+
+  colorWhite: {
+    color: "#fff !important",
+  },
+
+  buttonProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+});
+
 class SignUp extends Component {
   state = {
     name: "",
@@ -31,6 +51,7 @@ class SignUp extends Component {
     role_id: "",
     openMessage: false,
     roles: [],
+    loading: false,
   };
 
   componentDidMount() {
@@ -56,15 +77,19 @@ class SignUp extends Component {
     data.password_confirmation = data.password;
     delete data.openMessage;
     delete data.roles;
+    delete data.loading;
 
+    this.setState({ loading: true });
     jwtAuthService
       .register(data)
       .then((d) => {
+        this.setState({ loading: false });
         history.push({
           pathname: "/",
         });
       })
       .catch((err) => {
+        this.setState({ loading: false });
         this.setState({ openMessage: true });
       });
   };
@@ -78,7 +103,7 @@ class SignUp extends Component {
   };
 
   render() {
-    let { name, email, password, terms, role_id, roles } = this.state;
+    let { name, email, password, terms, role_id, roles, loading } = this.state;
 
     return (
       <div className="signup flex flex-center w-100 h-100vh">
@@ -90,12 +115,11 @@ class SignUp extends Component {
           <Alert
             onClose={this.handleClose}
             severity="error"
-            style={{ color: "#fff" }}
+            className={this.props.classes.colorWhite}
           >
             It was not possible to register a new user. Check the fields again.
           </Alert>
         </Snackbar>
-
         <div className="p-8">
           <Card className="signup-card position-relative y-center">
             <Grid container>
@@ -177,23 +201,32 @@ class SignUp extends Component {
                       I have read and agree to the terms of service.
                     </span>
                     <div className="flex flex-middle">
-                      <Button
-                        className="capitalize"
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                      >
-                        Sign up
-                      </Button>
-                      <span className="ml-16 mr-8">or</span>
-                      <Button
-                        className="capitalize"
-                        onClick={() =>
-                          this.props.history.push("/session/signin")
-                        }
-                      >
-                        Sign in
-                      </Button>
+                      <div className={this.props.classes.wrapper}>
+                        <Button
+                          className="capitalize"
+                          variant="contained"
+                          color="primary"
+                          disabled={loading}
+                          type="submit"
+                        >
+                          Sign up
+                        </Button>
+                        {loading && (
+                          <CircularProgress
+                            size={24}
+                            className={this.props.classes.buttonProgress}
+                          />
+                        )}
+                        <span className="ml-16 mr-8">or</span>
+                        <Button
+                          className="capitalize"
+                          onClick={() =>
+                            this.props.history.push("/session/signin")
+                          }
+                        >
+                          Sign in
+                        </Button>
+                      </div>
                     </div>
                   </ValidatorForm>
                 </div>
@@ -208,4 +241,6 @@ class SignUp extends Component {
 
 const mapStateToProps = () => ({});
 
-export default connect(mapStateToProps, {})(SignUp);
+export default withStyles(styles, { withTheme: true })(
+  connect(mapStateToProps, {})(SignUp)
+);
