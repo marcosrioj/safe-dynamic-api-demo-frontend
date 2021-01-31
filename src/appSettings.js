@@ -6,4 +6,4 @@ export const BACKEND_URL =
 export const FRONTEND_URL =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000"
-    : "https://safe-dynamic-api-demo-frontend.vercel.app/";
+    : "https://safe-dynamic-api-demo-frontend.vercel.app";
