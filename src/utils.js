@@ -252,6 +252,8 @@ export function createDevExpressDataSource(apiBase, fieldsToGet, urlViewBase) {
             const way = item.desc ? "desc" : "asc";
             params += `order=${item.selector},${way}&`;
           }
+        } else {
+          params += `?order=id,desc&`;
         }
 
         //Filter

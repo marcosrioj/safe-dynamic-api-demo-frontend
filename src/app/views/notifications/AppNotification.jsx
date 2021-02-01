@@ -23,7 +23,7 @@ import { BACKEND_URL } from "appSettings";
 import { createDevExpressDataSource } from "utils";
 import { setNotificationTotalCount } from "app/redux/actions/NotificationActions";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/notifications?order=id,desc`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/notifications`;
 const fiedlsToGet = ["id", "type", "title", "message", "timestamp"];
 const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 class AppNotification extends React.Component {

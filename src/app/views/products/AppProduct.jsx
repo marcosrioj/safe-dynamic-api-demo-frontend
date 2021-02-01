@@ -24,7 +24,7 @@ import {
   fileToBase64,
 } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/products?order=id,desc`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/products`;
 const fiedlsToGet = ["id", "name", "photo", "price", "stock"];
 const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
 

@@ -38,7 +38,7 @@ import {
   fileToBase64,
 } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/clients?order=id,desc`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/clients`;
 const fiedlsToGet = [
   "id",
   "name",
