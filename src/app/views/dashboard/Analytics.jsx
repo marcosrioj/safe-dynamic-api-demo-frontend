@@ -51,7 +51,6 @@ class Dashboard1 extends Component {
     });
 
     dashboardService.getTop5Sales().then((data) => {
-      console.log(data);
       this.setState({ top5Sales: data });
     });
   }

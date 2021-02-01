@@ -6819,7 +6819,7 @@ INSERT INTO `users` (`id`, `type`, `name`, `email`, `email_verified_at`, `passwo
 DROP TABLE IF EXISTS `campaigns_stats`;
 DROP VIEW IF EXISTS `campaigns_stats`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` SQL SECURITY DEFINER VIEW `campaigns_stats`  AS  select date_format(`campaigns`.`date`,'%Y') AS `year`,sum(`campaigns`.`budget`) AS `total`,`campaigns`.`name` AS `name` from `campaigns` where ((`campaigns`.`date` <= now()) and (`campaigns`.`date` >= (now() + interval -(2) year))) group by date_format(`campaigns`.`date`,'%Y'),`campaigns`.`name` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `campaigns_stats`  AS  select date_format(`campaigns`.`date`,'%Y') AS `year`,sum(`campaigns`.`budget`) AS `total`,`campaigns`.`name` AS `name` from `campaigns` where ((`campaigns`.`date` <= now()) and (`campaigns`.`date` >= (now() + interval -(2) year))) group by date_format(`campaigns`.`date`,'%Y'),`campaigns`.`name` ;
 
 -- --------------------------------------------------------
 
@@ -6829,7 +6829,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` 
 DROP TABLE IF EXISTS `general_stats`;
 DROP VIEW IF EXISTS `general_stats`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` SQL SECURITY DEFINER VIEW `general_stats`  AS  select (select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by week(`orders`.`date`,0) limit 1) AS `this_week_sales`,(select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by month(`orders`.`date`) limit 1) AS `this_month_sales`,(select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by month(`orders`.`date`) limit 1,1) AS `last_month_sales`,(select count(0) from `clients`) AS `clients_total`,(select count(0) from `clients` where (`clients`.`is_active` = 1)) AS `clients_active`,(select count(0) from `orders` where (`orders`.`status` = 'delivered')) AS `orders_delivered`,(select count(0) from `orders` where (`orders`.`status` = 'in_progress')) AS `orders_in_progress` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `general_stats`  AS  select (select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by week(`orders`.`date`,0) limit 1) AS `this_week_sales`,(select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by month(`orders`.`date`) limit 1) AS `this_month_sales`,(select sum(`products`.`price`) from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by month(`orders`.`date`) limit 1,1) AS `last_month_sales`,(select count(0) from `clients`) AS `clients_total`,(select count(0) from `clients` where (`clients`.`is_active` = 1)) AS `clients_active`,(select count(0) from `orders` where (`orders`.`status` = 'delivered')) AS `orders_delivered`,(select count(0) from `orders` where (`orders`.`status` = 'in_progress')) AS `orders_in_progress` ;
 
 -- --------------------------------------------------------
 
@@ -6839,7 +6839,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` 
 DROP TABLE IF EXISTS `orders_view`;
 DROP VIEW IF EXISTS `orders_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` SQL SECURITY DEFINER VIEW `orders_view`  AS  select `orders`.`id` AS `id`,`clients`.`name` AS `client_name`,`clients`.`id` AS `client_id`,`products`.`name` AS `product_name`,`products`.`id` AS `product_id`,`orders`.`status` AS `status`,`orders`.`date` AS `date` from ((`orders` join `clients` on((`orders`.`client_id` = `clients`.`id`))) join `products` on((`orders`.`product_id` = `products`.`id`))) ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `orders_view`  AS  select `orders`.`id` AS `id`,`clients`.`name` AS `client_name`,`clients`.`id` AS `client_id`,`products`.`name` AS `product_name`,`products`.`id` AS `product_id`,`orders`.`status` AS `status`,`orders`.`date` AS `date` from ((`orders` join `clients` on((`orders`.`client_id` = `clients`.`id`))) join `products` on((`orders`.`product_id` = `products`.`id`))) ;
 
 -- --------------------------------------------------------
 
@@ -6849,7 +6849,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` 
 DROP TABLE IF EXISTS `top5_products`;
 DROP VIEW IF EXISTS `top5_products`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` SQL SECURITY DEFINER VIEW `top5_products`  AS  select `products`.`id` AS `product_id`,`products`.`name` AS `product_name`,`products`.`photo` AS `product_photo`,`products`.`stock` AS `product_stock`,sum(`products`.`price`) AS `total_price_sales`,sum(1) AS `total_sales` from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by `products`.`id` order by sum(1) desc limit 5 ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `top5_products`  AS  select `products`.`id` AS `product_id`,`products`.`name` AS `product_name`,`products`.`photo` AS `product_photo`,`products`.`stock` AS `product_stock`,sum(`products`.`price`) AS `total_price_sales`,sum(1) AS `total_sales` from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) group by `products`.`id` order by sum(1) desc limit 5 ;
 
 -- --------------------------------------------------------
 
@@ -6859,7 +6859,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` 
 DROP TABLE IF EXISTS `year_sales_by_month`;
 DROP VIEW IF EXISTS `year_sales_by_month`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`safedynamic2`@`208.113.128.0/255.255.128.0` SQL SECURITY DEFINER VIEW `year_sales_by_month`  AS  select sum(if((`suba`.`MONTH` = 1),`suba`.`total`,0)) AS `1`,sum(if((`suba`.`MONTH` = 2),`suba`.`total`,0)) AS `2`,sum(if((`suba`.`MONTH` = 3),`suba`.`total`,0)) AS `3`,sum(if((`suba`.`MONTH` = 4),`suba`.`total`,0)) AS `4`,sum(if((`suba`.`MONTH` = 5),`suba`.`total`,0)) AS `5`,sum(if((`suba`.`MONTH` = 6),`suba`.`total`,0)) AS `6`,sum(if((`suba`.`MONTH` = 7),`suba`.`total`,0)) AS `7`,sum(if((`suba`.`MONTH` = 8),`suba`.`total`,0)) AS `8`,sum(if((`suba`.`MONTH` = 9),`suba`.`total`,0)) AS `9`,sum(if((`suba`.`MONTH` = 10),`suba`.`total`,0)) AS `10`,sum(if((`suba`.`MONTH` = 11),`suba`.`total`,0)) AS `11`,sum(if((`suba`.`MONTH` = 12),`suba`.`total`,0)) AS `12` from (select date_format(`orders`.`date`,'%c') AS `MONTH`,sum(`products`.`price`) AS `total` from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) where ((`orders`.`date` <= now()) and (`orders`.`date` >= (now() + interval -(12) month))) group by `orders`.`date`) `suba` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `year_sales_by_month`  AS  select sum(if((`suba`.`MONTH` = 1),`suba`.`total`,0)) AS `1`,sum(if((`suba`.`MONTH` = 2),`suba`.`total`,0)) AS `2`,sum(if((`suba`.`MONTH` = 3),`suba`.`total`,0)) AS `3`,sum(if((`suba`.`MONTH` = 4),`suba`.`total`,0)) AS `4`,sum(if((`suba`.`MONTH` = 5),`suba`.`total`,0)) AS `5`,sum(if((`suba`.`MONTH` = 6),`suba`.`total`,0)) AS `6`,sum(if((`suba`.`MONTH` = 7),`suba`.`total`,0)) AS `7`,sum(if((`suba`.`MONTH` = 8),`suba`.`total`,0)) AS `8`,sum(if((`suba`.`MONTH` = 9),`suba`.`total`,0)) AS `9`,sum(if((`suba`.`MONTH` = 10),`suba`.`total`,0)) AS `10`,sum(if((`suba`.`MONTH` = 11),`suba`.`total`,0)) AS `11`,sum(if((`suba`.`MONTH` = 12),`suba`.`total`,0)) AS `12` from (select date_format(`orders`.`date`,'%c') AS `MONTH`,sum(`products`.`price`) AS `total` from (`orders` join `products` on((`orders`.`product_id` = `products`.`id`))) where ((`orders`.`date` <= now()) and (`orders`.`date` >= (now() + interval -(12) month))) group by `orders`.`date`) `suba` ;
 
 --
 -- Indexes for dumped tables
