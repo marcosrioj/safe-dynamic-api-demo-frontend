@@ -230,12 +230,17 @@ function getAllFilters(filtersParam) {
   return filters;
 }
 
-export function createDevExpressDataSource(apiBase, fieldsToGet, urlViewBase) {
+export function createDevExpressDataSource(
+  apiBase,
+  fieldsToGet,
+  urlViewBase,
+  initialOrder
+) {
   const datasource = new DataSource({
     store: new CustomStore({
       key: "id",
       load: function (loadOptions) {
-        let params = apiBase.indexOf("?") >= 0 ? "&" : "?";
+        let params = "?";
 
         //Page
         const page = loadOptions.skip / loadOptions.take + 1;
@@ -246,14 +251,18 @@ export function createDevExpressDataSource(apiBase, fieldsToGet, urlViewBase) {
         }
 
         //Sort
-        if (loadOptions.sort) {
-          for (const i in loadOptions.sort) {
-            const item = loadOptions.sort[i];
-            const way = item.desc ? "desc" : "asc";
-            params += `order=${item.selector},${way}&`;
+        if (loadOptions.sort || initialOrder) {
+          if (loadOptions.sort) {
+            for (const i in loadOptions.sort) {
+              const item = loadOptions.sort[i];
+              const way = item.desc ? "desc" : "asc";
+              params += `order=${item.selector},${way}&`;
+            }
+          } else {
+            params += `${initialOrder}&`;
           }
         } else {
-          params += `?order=id,desc&`;
+          params += `order=id,desc&`;
         }
 
         //Filter

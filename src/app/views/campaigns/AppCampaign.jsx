@@ -20,9 +20,15 @@ import { Breadcrumb, SimpleCard } from "matx";
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressDataSource } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/campaigns?order=date,desc`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/campaigns`;
 const fiedlsToGet = ["id", "name", "budget", "date"];
-const datasource = createDevExpressDataSource(urlBase, fiedlsToGet);
+const initialOrder = "order=date,desc";
+const datasource = createDevExpressDataSource(
+  urlBase,
+  fiedlsToGet,
+  null,
+  initialOrder
+);
 
 class AppCampaign extends React.Component {
   render() {

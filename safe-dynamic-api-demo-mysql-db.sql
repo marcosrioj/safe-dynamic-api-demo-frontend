@@ -6887,6 +6887,18 @@ ALTER TABLE `clients`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices para tabela `campaigns`
+--
+ALTER TABLE `campaigns`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -6998,6 +7010,18 @@ ALTER TABLE `announcements`
 --
 ALTER TABLE `clients`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT de tabela `campaigns`
+--
+ALTER TABLE `campaigns`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2601;
+
+--
+-- AUTO_INCREMENT de tabela `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3700;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`

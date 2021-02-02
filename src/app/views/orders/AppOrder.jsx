@@ -20,8 +20,9 @@ import { Breadcrumb, SimpleCard } from "matx";
 import { BACKEND_URL } from "appSettings";
 import { createDevExpressDataSource } from "utils";
 
-const urlBase = `${BACKEND_URL}/dynamicapi/records/orders?order=date,desc`;
-const urlViewBase = `${BACKEND_URL}/dynamicapi/records/orders_view?order=date,desc`;
+const urlBase = `${BACKEND_URL}/dynamicapi/records/orders`;
+const urlViewBase = `${BACKEND_URL}/dynamicapi/records/orders_view`;
+const initialOrder = "order=date,desc";
 const fiedlsToGet = [
   "id",
   "client_id",
@@ -34,7 +35,8 @@ const fiedlsToGet = [
 const datasource = createDevExpressDataSource(
   urlBase,
   fiedlsToGet,
-  urlViewBase
+  urlViewBase,
+  initialOrder
 );
 
 class AppOrder extends React.Component {
@@ -51,10 +53,9 @@ class AppOrder extends React.Component {
             showBorders={true}
             remoteOperations={true}
             onRowInserting={(e) => {
-              e.data.date = moment(
-                e.data.date,
-                "DD/MM/YYYY HH:mm:ss"
-              ).format("YYYY-MM-DD HH:mm:ss");
+              e.data.date = moment(e.data.date, "DD/MM/YYYY HH:mm:ss").format(
+                "YYYY-MM-DD HH:mm:ss"
+              );
             }}
           >
             <Sorting mode="multiple" />
