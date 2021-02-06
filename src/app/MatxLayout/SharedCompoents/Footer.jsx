@@ -28,7 +28,7 @@ const Footer = ({ theme, settings }) => {
               SafeDynamicAPI App/Frontend Sample - Github
             </Button>
           </a>
-          <a href="https://safedynamicapi.com">
+          <a href="https://go.hotmart.com/W47317725C">
             <Button variant="contained" color="secondary">
               Buy SafeDynamicAPI
             </Button>
